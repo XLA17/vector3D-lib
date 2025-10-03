@@ -1,4 +1,4 @@
-#include "../Vector3.cpp";
+#include "../Vector3.cpp"
 
 class VectorUtils
 {
@@ -23,7 +23,7 @@ public:
         {
             throw std::runtime_error("You cannot normalize a vector zero!");
         }
-        return Vector3(v.x/v.magnitude, v.y/v.magnitude, v.z/v.magnitude);
+        return Vector3(v.x/v.length, v.y/v.length, v.z/v.length);
     }
 
 private:
