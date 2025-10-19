@@ -1,11 +1,10 @@
 #include <iostream>
 
-#include "../Pixel.cpp"
-#include "../Image.cpp"
+#include "rendering/Pixel.h"
+#include "rendering/Image.h"
 
-using namespace std;
 
-void test() {
+void main() {
     std::cout << "---- Tests de création image ----\n";
     const int rows = 10;
     const int cols = 10;
@@ -27,5 +26,5 @@ void test() {
             }
         }
     }
-    writeImagePPM(rows, cols, data, "rouge.ppm");
+    writeImagePPM(rows, cols, data, "ppm/rouge.ppm");
 }

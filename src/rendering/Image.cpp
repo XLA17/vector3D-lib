@@ -1,13 +1,7 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+#include "rendering/Image.h"
 
-#include "physics/Vector3.cpp"
-#include "Pixel.cpp"
-
-#pragma once
-
-void writeImagePPM(int width, int height, Pixel** data, const char* filename) {
+void writeImagePPM(int width, int height, Pixel** data, const char* filename)
+{
     std::ofstream file(filename);
     if (!file) {
         std::cerr << "Erreur lors de la création du fichier.\n";

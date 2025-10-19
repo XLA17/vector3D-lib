@@ -1,10 +1,9 @@
 #include <iostream>
 
-#include "../physics/Vector3.cpp"
+#include "physics/Vector3.h"
 
-using namespace std;
 
-void test() {
+void main() {
     Vector3 v1(1, 2, 3);
     Vector3 v2(4, -5, 6);
 
