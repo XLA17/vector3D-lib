@@ -4,6 +4,7 @@
 #include "Direction.h"
 
 class Ray {
+public:
     Point3 origin;
     Direction direction;
 

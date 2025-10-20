@@ -3,6 +3,8 @@
 
 Direction::Direction(Vector3 v)
 {
-    std::cout << "res: " << v.x << " " << v.y << " " << v.z << std::endl;
-    direction = v.normalize();
+    Vector3 direction = v.normalize();
+    x = direction.x;
+    y = direction.y;
+    z = direction.z;
 };

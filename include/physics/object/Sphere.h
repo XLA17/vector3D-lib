@@ -5,7 +5,7 @@
 class Sphere {
 public:
     Point3 center;
-    double radius;
+    float radius;
 
-    Sphere(const Point3& center, double radius);
-};
+    Sphere(const Point3& center, float radius);
+};  

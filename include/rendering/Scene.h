@@ -10,12 +10,12 @@
 class Scene {
     // need to change to a camera instead of cameraPos, fov and screen. I can fusion all these
 public:
-    double fov;
+    float fov;
     Screen screen;
     Point3 cameraPos;
     std::list<Sphere> objects; // à changer en list<Object>
 
-    Scene(double fov, Screen screen);
+    Scene(float fov, Screen screen);
 
     // Save an image of what the camera is capturing
     void takePicture(const char* filename);

@@ -1,7 +1,7 @@
 #include "physics/Vector3.h"
 
 
-Vector3::Vector3(double x, double y, double z)
+Vector3::Vector3(float x, float y, float z)
         : x(x), y(y), z(z), length(_length()) {}
 
 Vector3 Vector3::operator+(const Vector3& v) const
@@ -19,12 +19,12 @@ Vector3 Vector3::operator*(Vector3 v) const
     return Vector3(x*v.x, y*v.y, z*v.z);
 }
 
-Vector3 Vector3::operator*(double f) const
+Vector3 Vector3::operator*(float f) const
 {
     return Vector3(x*f, y*f, z*f);
 }
 
-Vector3 Vector3::operator/(double f) const
+Vector3 Vector3::operator/(float f) const
 {
     if (f == 0)
     {
@@ -54,14 +54,14 @@ void Vector3::operator*=(Vector3 v) const
     z * v.z;
 }
 
-void Vector3::operator*=(double f)
+void Vector3::operator*=(float f)
 {
     x * f;
     y * f;
     z * f;
 }
 
-void Vector3::operator/=(double f)
+void Vector3::operator/=(float f)
 {
     x / f;
     y / f;
@@ -77,7 +77,7 @@ Vector3 Vector3::normalize() const
     return Vector3(x / length, y / length, z / length);
 }
 
-double Vector3::_length() const
+float Vector3::_length() const
 {
     return std::sqrt(x*x + y*y + z*z);
 }

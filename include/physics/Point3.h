@@ -5,12 +5,12 @@
 
 class Point3 {
 public:
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
     Vector3 position;
 
-    Point3(double x, double y, double z);
+    Point3(float x = 0, float y = 0, float z = 0);
 
-    Direction operator-(const Point3& p) const;
+    // Direction operator-(const Point3& p) const;
 };

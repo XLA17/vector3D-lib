@@ -8,5 +8,5 @@ public:
     int width;
     int height;
 
-    Screen(Point3 origin, double width, double height);
+    Screen(Point3 origin, float width, float height);
 };
