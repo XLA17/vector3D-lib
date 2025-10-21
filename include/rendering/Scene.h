@@ -1,6 +1,6 @@
 #pragma once
 
-#include <list>
+#include <vector>
 
 #include "../physics/Point3.h"
 #include "../physics/object/Sphere.h"
@@ -13,9 +13,10 @@ public:
     float fov;
     Screen screen;
     Point3 cameraPos;
-    std::list<Sphere> objects; // à changer en list<Object>
+    float rayMaxRange;
+    std::vector<Sphere> objects; // à changer en list<Object>
 
-    Scene(float fov, Screen screen);
+    Scene(float fov, Screen screen, float rayMaxRange);
 
     // Save an image of what the camera is capturing
     void takePicture(const char* filename);

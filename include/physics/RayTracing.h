@@ -9,4 +9,4 @@
 #include "rendering/Scene.h"
 
 Pixel** rayTracing(const Scene& scene);
-std::list<Point3> getIntersectPointBetweenRayAndSphere(Ray ray, Sphere sphere);
+float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere);

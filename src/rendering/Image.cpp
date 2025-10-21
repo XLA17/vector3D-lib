@@ -10,6 +10,7 @@ void writeImagePPM(int width, int height, Pixel** data, const char* filename)
 
     file << "P3\n";
     file << width << " " << height << "\n";
+    file << "255\n";
 
     for (int j = 0; j < height; ++j) {
         for (int i = 0; i < width; ++i) {

@@ -2,6 +2,7 @@
 
 
 Direction::Direction(Vector3 v)
+    : vector(v)
 {
     Vector3 direction = v.normalize();
     x = direction.x;

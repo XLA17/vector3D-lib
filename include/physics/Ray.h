@@ -7,6 +7,7 @@ class Ray {
 public:
     Point3 origin;
     Direction direction;
+    float maxRange;
 
-    Ray(Point3 origin, Direction direction);
+    Ray(Point3 origin, Direction direction, float maxRange);
 };

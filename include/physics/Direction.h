@@ -7,6 +7,7 @@
 // Direction is a Vector3 automatically normalized
 class Direction {
 public:
+    Vector3 vector;
     float x;
     float y;
     float z;

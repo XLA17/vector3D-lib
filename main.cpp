@@ -9,16 +9,16 @@
 int main()
 {
     const float fov = 100;
-    const int screenWidth = 100;
-    const int screenHeight = 100;
+    const int screenWidth = 500;
+    const int screenHeight = 500;
     const Point3 screenOrigin = Point3(-screenWidth/2, -screenHeight/2, 0);
 
     Screen screen = Screen(screenOrigin, screenWidth, screenHeight);
 
-    Scene scene1 = Scene(fov, screen);
+    Scene scene1 = Scene(fov, screen, 50.0);
 
-    Point3 s1Center = Point3(0, 0, 50);
-    float s1Radius = 10;
+    Point3 s1Center = Point3(0, 0, 25);
+    float s1Radius = 50;
     Sphere s1 = Sphere(s1Center, s1Radius);
     scene1.objects.push_back(s1);
 
