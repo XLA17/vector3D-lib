@@ -10,5 +10,8 @@ public:
     float z;
     Vector3 vector;
 
-    Point3(float x = 0, float y = 0, float z = 0);
+    Point3(float x, float y, float z);
+    explicit Point3(Vector3 v);
+
+    static const Point3 Origin;
 };

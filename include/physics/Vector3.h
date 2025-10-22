@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -26,6 +27,7 @@ public:
     void operator*=(float f);
     void operator/=(float f);
     Vector3 normalize() const;
+    std::string toString() const;
 
 private:
     float _length() const;

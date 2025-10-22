@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "physics/Vector3.h"
 
 
@@ -80,4 +82,11 @@ Vector3 Vector3::normalize() const
 float Vector3::_length() const
 {
     return std::sqrt(x*x + y*y + z*z);
+}
+
+std::string Vector3::toString() const
+{
+    std::ostringstream ss;
+    ss << "(" << x << ", " << y << ", " << z << ")";
+    return ss.str();
 }

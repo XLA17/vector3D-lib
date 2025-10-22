@@ -3,26 +3,31 @@
 #include "physics/Point3.h"
 #include "physics/object/Sphere.h"
 #include "rendering/Scene.h"
-#include "rendering/Screen.h"
+#include "rendering/Camera.h"
 
 
 int main()
 {
-    const float fov = 100;
-    const int screenWidth = 500;
-    const int screenHeight = 500;
-    const Point3 screenOrigin = Point3(-screenWidth/2, -screenHeight/2, 0);
+    const float fov = 90;
+    const int screenWidth = 1000;
+    const float ratioAspect = 16.0/9.0;
+    const Point3 cameraCenter = Point3::Origin;
+    const float rayMaxRange = 5000;
+    Camera mainCamera = Camera(cameraCenter, screenWidth, fov, ratioAspect, rayMaxRange);
 
-    Screen screen = Screen(screenOrigin, screenWidth, screenHeight);
+    Scene scene = Scene(mainCamera);
 
-    Scene scene1 = Scene(fov, screen, 50.0);
-
-    Point3 s1Center = Point3(0, 0, 25);
-    float s1Radius = 50;
+    Point3 s1Center = Point3(-165, 0, 1500);
+    float s1Radius = 100;
     Sphere s1 = Sphere(s1Center, s1Radius);
-    scene1.objects.push_back(s1);
+    scene.objects.push_back(s1);
 
-    scene1.takePicture("ppm/scene1.ppm");
+    Point3 s2Center = Point3(165, 0, 1500);
+    float s2Radius = 100;
+    Sphere s2 = Sphere(s2Center, s2Radius);
+    scene.objects.push_back(s2);
+
+    scene.takePicture("ppm/scene.ppm");
 
     return 0;
 }
