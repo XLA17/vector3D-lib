@@ -1,4 +1,4 @@
-#include "physics/utils/VectorUtils.h"
+#include "physics/utils/VectorUtils.hpp"
 
 
 float dotProduct(const Vector3& v1, const Vector3& v2)

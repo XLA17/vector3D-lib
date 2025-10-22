@@ -1,4 +1,4 @@
-#include "rendering/Pixel.h"
+#include "rendering/Pixel.hpp"
 
 
 Pixel::Pixel()

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "physics/Vector3.h"
-#include "physics/Direction.h"
-#include "physics/Point3.h"
+#include "physics/Vector3.hpp"
+#include "physics/Direction.hpp"
+#include "physics/Point3.hpp"
 
 
 float dotProduct(const Vector3& v1, const Vector3& v2);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../physics/Point3.h"
+#include "../physics/Point3.hpp"
 
 class Camera {
 public:

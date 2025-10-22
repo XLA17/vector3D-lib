@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Vector3.h"
+#include "Vector3.hpp"
 
 // Direction is a Vector3 automatically normalized
 class Direction {

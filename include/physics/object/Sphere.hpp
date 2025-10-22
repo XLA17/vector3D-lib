@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../Point3.h"
+#include "Object.hpp"
+#include "../Point3.hpp"
 
-class Sphere {
+class Sphere : Object {
 public:
     Point3 center;
     float radius;

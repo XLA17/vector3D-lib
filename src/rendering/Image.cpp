@@ -1,4 +1,4 @@
-#include "rendering/Image.h"
+#include "rendering/Image.hpp"
 
 void writeImagePPM(int width, int height, Pixel** data, const char* filename)
 {

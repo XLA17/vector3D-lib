@@ -4,6 +4,6 @@
 #include <fstream>
 #include <string>
 
-#include "Pixel.h"
+#include "Pixel.hpp"
 
 void writeImagePPM(int width, int height, Pixel** data, const char* filename);

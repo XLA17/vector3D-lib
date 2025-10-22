@@ -1,4 +1,4 @@
-#include "physics/Direction.h"
+#include "physics/Direction.hpp"
 
 
 Direction::Direction(Vector3 v)

@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "rendering/Pixel.h"
-#include "rendering/Image.h"
+#include "rendering/Pixel.hpp"
+#include "rendering/Image.hpp"
 
 
 void main() {

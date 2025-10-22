@@ -1,7 +1,7 @@
 #include <sstream>
 #include <numbers>
 
-#include "rendering/Camera.h"
+#include "rendering/Camera.hpp"
 
 
 Camera::Camera(Point3 center, int width, int fov, float ratioAspect, float rayMaxRange)

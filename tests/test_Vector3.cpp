@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "physics/Vector3.h"
+#include "physics/Vector3.hpp"
 
 
 void main() {

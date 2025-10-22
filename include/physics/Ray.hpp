@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Point3.h"
-#include "Direction.h"
+#include "Point3.hpp"
+#include "Direction.hpp"
 
 class Ray {
 public:

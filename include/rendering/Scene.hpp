@@ -2,15 +2,15 @@
 
 #include <vector>
 
-#include "../physics/Point3.h"
-#include "../physics/object/Sphere.h"
-#include "../rendering/Camera.h"
+#include "../physics/Point3.hpp"
+#include "../physics/object/Object.hpp"
+#include "../rendering/Camera.hpp"
 
 
 class Scene {
 public:
     Camera camera;
-    std::vector<Sphere> objects; // à changer en liste de <Object>
+    std::vector<Object> objects;
 
     Scene(Camera camera);
 

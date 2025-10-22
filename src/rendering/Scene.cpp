@@ -1,6 +1,6 @@
-#include "rendering/Scene.h"
-#include "rendering/Image.h"
-#include "physics/RayTracing.h"
+#include "rendering/Scene.hpp"
+#include "rendering/Image.hpp"
+#include "physics/RayTracing.hpp"
 
 
 Scene::Scene(Camera camera)

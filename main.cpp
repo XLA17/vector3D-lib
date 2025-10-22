@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "physics/Point3.h"
-#include "physics/object/Sphere.h"
-#include "rendering/Scene.h"
-#include "rendering/Camera.h"
+#include "physics/Point3.hpp"
+#include "physics/object/Sphere.hpp"
+#include "rendering/Scene.hpp"
+#include "rendering/Camera.hpp"
 
 
 int main()

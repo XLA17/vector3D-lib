@@ -1,4 +1,4 @@
-#include "physics/Ray.h"
+#include "physics/Ray.hpp"
 
 
 Ray::Ray(Point3 origin, Direction direction, float maxRange)

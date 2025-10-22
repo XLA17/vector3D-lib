@@ -1,4 +1,4 @@
-#include "physics/Point3.h"
+#include "physics/Point3.hpp"
 
 
 Point3::Point3(float x, float y, float z)

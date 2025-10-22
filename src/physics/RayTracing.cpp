@@ -1,7 +1,7 @@
 #include <cfloat>
 
-#include "physics/RayTracing.h"
-#include "physics/utils/VectorUtils.h"
+#include "physics/RayTracing.hpp"
+#include "physics/utils/VectorUtils.hpp"
 
 Pixel** rayTracing(const Scene& scene) {
     Camera mainCamera = scene.camera;
