@@ -11,30 +11,24 @@ Pixel** rayTracing(const Scene& scene) {
     for (int i = 0; i < mainCamera.height; ++i) {
         data[i] = new Pixel[mainCamera.width];
     }
-    std::cout << mainCamera.toString() << std::endl;
     
     for (int y = 0; y < mainCamera.height; y++) {
         for (int x = 0; x < mainCamera.width; x++) {
             Point3 currentcameraPoint = Point3(mainCamera.center.x - mainCamera.width/2 + x, mainCamera.center.y + mainCamera.height/2 - y, mainCamera.center.z);
-            Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint); // obliger d'inverser le vecteur directeur pour que ça marche, je comprends pas
+            Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
             Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
-            // std::cout << dir.vector.toString() << std::endl;
-            // if (currentcameraPoint.x == 0) {
-            //     std::cout << "dir: " << dir.vector.toString() << std::endl;
-            // }
 
             //test sur tous les éléments de la scène pour les détecter
             float smallerdistance = mainCamera.rayMaxRange;
+            Sphere nearestObject = Sphere(Point3(-1,-1,-1), 1, Color::Black);
             for (Sphere object : scene.objects) {
                 float d = getDistanceBetweenRayAndSphere(ray, object);
-                // if (d > 0) {
-                //     std::cout << "d: " << d << std::endl;
-                // }
                 if (d > 0 && d < smallerdistance) {
                     smallerdistance = d;
+                    nearestObject = object;
                 }
             }
-            data[y][x] = Pixel(255, 255, 255).dimColor(1 - smallerdistance / mainCamera.rayMaxRange);
+            data[y][x] = nearestObject.color.dimColor(1 - smallerdistance / mainCamera.rayMaxRange);
         }
     }
 

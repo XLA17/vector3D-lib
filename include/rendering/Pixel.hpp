@@ -1,20 +1,12 @@
 #pragma once
 
-#include <iostream>
+#include "rendering/Color.hpp"
 
-using namespace std;
 
 class Pixel {
 public:
-    int r;
-    int g;
-    int b;
+    Color color;
 
     Pixel();
-    Pixel(int red, int green, int blue);
-    Pixel dimColor(float percentage) const;
-
-    static const Pixel Rouge;
-    static const Pixel Vert;
-    static const Pixel Bleu;
+    Pixel(Color color);
 };

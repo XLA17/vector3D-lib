@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "physics/Point3.hpp"
+#include "physics/Light.hpp"
 #include "physics/object/Sphere.hpp"
 #include "rendering/Scene.hpp"
 #include "rendering/Camera.hpp"
@@ -19,13 +20,16 @@ int main()
 
     Point3 s1Center = Point3(-165, 0, 1500);
     float s1Radius = 100;
-    Sphere s1 = Sphere(s1Center, s1Radius);
+    Sphere s1 = Sphere(s1Center, s1Radius, Color::Red);
     scene.objects.push_back(s1);
 
     Point3 s2Center = Point3(165, 0, 1500);
     float s2Radius = 100;
-    Sphere s2 = Sphere(s2Center, s2Radius);
+    Sphere s2 = Sphere(s2Center, s2Radius, Color::Blue);
     scene.objects.push_back(s2);
+
+    Light light = Light(Point3(0, 0, 2000), 1000);
+    scene.lights.push_back(light);
 
     scene.takePicture("ppm/scene.ppm");
 

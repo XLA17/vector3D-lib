@@ -14,7 +14,7 @@ void writeImagePPM(int width, int height, Pixel** data, const char* filename)
 
     for (int j = 0; j < height; ++j) {
         for (int i = 0; i < width; ++i) {
-            file << data[j][i].r << " " << data[j][i].g << " " << data[j][i].b << "  ";
+            file << data[j][i].color.r << " " << data[j][i].color.g << " " << data[j][i].color.b << "  ";
         }
         file << "\n";
     }

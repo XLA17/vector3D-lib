@@ -2,15 +2,17 @@
 
 #include <vector>
 
-#include "../physics/Point3.hpp"
-#include "../physics/object/Object.hpp"
-#include "../rendering/Camera.hpp"
+#include "physics/Point3.hpp"
+#include "physics/Light.hpp"
+#include "physics/object/Sphere.hpp"
+#include "rendering/Camera.hpp"
 
 
 class Scene {
 public:
     Camera camera;
-    std::vector<Object> objects;
+    std::vector<Sphere> objects;
+    std::vector<Light> lights;
 
     Scene(Camera camera);
 
