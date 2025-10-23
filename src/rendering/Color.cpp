@@ -10,10 +10,6 @@ Color::Color()
 
 Color::Color(int red, int green, int blue)
 {
-    if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) {
-        throw std::runtime_error("R, G and B must be between 0 and 255");
-    }
-
     r = red;
     g = green;
     b = blue;
@@ -21,9 +17,6 @@ Color::Color(int red, int green, int blue)
 
 Color Color::dimColor(float percentage) const
 {
-    if (percentage < 0 || percentage > 1) {
-        throw std::runtime_error("percentage must be between 0 and 1");
-    }
     return Color(r * percentage, g * percentage, b * percentage);
 }
 

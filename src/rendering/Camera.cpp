@@ -16,7 +16,7 @@ Camera::Camera(Point3 center, int width, int fov, float ratioAspect, float rayMa
     if (rayMaxRange <= 0) {
         throw std::runtime_error("rayMaxRange must be > 0");
     }
-    std::cout << float(width) / ratioAspect << std::endl;
+    // std::cout << float(width) / ratioAspect << std::endl;
 }
 
 std::string Camera::toString() const

@@ -20,15 +20,33 @@ Pixel** rayTracing(const Scene& scene) {
 
             //test sur tous les éléments de la scène pour les détecter
             float smallerdistance = mainCamera.rayMaxRange;
-            Sphere nearestObject = Sphere(Point3(-1,-1,-1), 1, Color::Black);
-            for (Sphere object : scene.objects) {
+            Direction normal = Direction::Down; // TODO: update with abstract class object
+            Color color = Color::Black;
+            Point3 intersectPoint = Point3(0, 0, 0);
+            for (Sphere object : scene.spheres) {
                 float d = getDistanceBetweenRayAndSphere(ray, object);
-                if (d > 0 && d < smallerdistance) {
+                if (d < smallerdistance) {
                     smallerdistance = d;
-                    nearestObject = object;
+                    color = object.color;
+                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * smallerdistance);
+                    normal = getDirection(object.center, intersectPoint);
                 }
             }
-            data[y][x] = nearestObject.color.dimColor(1 - smallerdistance / mainCamera.rayMaxRange);
+            for (Plane object : scene.planes) {
+                float d = getDistanceBetweenRayAndPlane(ray, object);
+                if (d < smallerdistance) {
+                    smallerdistance = d;
+                    color = object.color;
+                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * smallerdistance);
+                    normal = object.normal;
+                }
+            }
+            Color pixelColor;
+            if (smallerdistance < mainCamera.rayMaxRange){
+                pixelColor = lightFct(scene, intersectPoint, color, normal);
+            }
+            data[y][x] = Pixel(pixelColor);
+            // data[y][x] = nearestObject.color.dimColor(1 - smallerdistance / mainCamera.rayMaxRange);
         }
     }
 
@@ -59,4 +77,26 @@ float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere) {
     return t;
 }
 
-// Point3 res = Point3(ray.origin.x + ray.direction.x * t, ray.origin.y + ray.direction.y * t, ray.origin.z + ray.direction.z * t);
+float getDistanceBetweenRayAndPlane(Ray ray, Plane plane) {
+    float num = - dotProduct(plane.normal.vector, ray.origin.vector) + dotProduct(plane.normal.vector, plane.p.vector);
+    float denom = dotProduct(plane.normal.vector, ray.direction.vector);
+    if (denom != 0) {
+        float t = num / denom;
+        if (t > 0) {
+            return t;
+        }
+    }
+    return -1;
+}
+
+Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal) {
+    Light light = scene.lights[0];
+    Vector3 Li = getDirection(light.position, objectPoint).vector;
+    float Lo = dotProduct(normal.vector, Li);
+    float f = 0;
+    if (Lo >= 0) {
+        f = light.emission / pow(getDistance(objectPoint, light.position), 2) * Lo;
+    }
+    // std::cout << "f: " << f << std::endl;
+    return color.dimColor(f);
+}
