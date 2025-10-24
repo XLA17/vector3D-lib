@@ -15,11 +15,12 @@ int main()
     const float ratioAspect = 16.0/9.0;
     const Point3 cameraCenter = Point3::Origin;
     const float rayMaxRange = 1000;
+    Camera mainCamera = Camera(cameraCenter, screenWidth, fov, ratioAspect, rayMaxRange);
     const int WALL_LEFT = -screenWidth/2;
     const int WALL_RIGHT = screenWidth/2;
-    Camera mainCamera = Camera(cameraCenter, screenWidth, fov, ratioAspect, rayMaxRange);
     const int CEILLING = mainCamera.height/2;
-    const int GOUND = -mainCamera.height/2;
+    const int GROUND = -mainCamera.height/2;
+    const int BACK = 500;
 
     Scene scene = Scene(mainCamera);
 
@@ -33,19 +34,19 @@ int main()
     Sphere s2 = Sphere(s2Center, s2Radius, Color::Blue);
     scene.spheres.push_back(s2);
 
-    Plane pUp = Plane(Point3(0, 300, 0), Direction::Down, Color::White);
-    Plane pDown = Plane(Point3(0, -300, 0), Direction::Up, Color::White);
-    Plane pLeft = Plane(Point3(-500, 0, 0), Direction::Right, Color::White);
-    Plane pRight = Plane(Point3(500, 0, 0), Direction::Left, Color::White);
-    Plane pBack = Plane(Point3(0, 0, 500), Direction::Backward, Color::White);
+    Plane pUp = Plane(Point3(0, CEILLING, 0), Direction::Down, Color::White);
+    Plane pDown = Plane(Point3(0, GROUND, 0), Direction::Up, Color::White);
+    Plane pLeft = Plane(Point3(WALL_LEFT, 0, 0), Direction::Right, Color::White);
+    Plane pRight = Plane(Point3(WALL_RIGHT, 0, 0), Direction::Left, Color::White);
+    Plane pBack = Plane(Point3(0, 0, BACK), Direction::Backward, Color::White);
     scene.planes.push_back(pUp);
     scene.planes.push_back(pDown);
     scene.planes.push_back(pLeft);
     scene.planes.push_back(pRight);
     scene.planes.push_back(pBack);
 
-    Light light = Light(Point3(-500, 0, 0), 100000);
-    Light light2 = Light(Point3(0, 0, 0), 100000);
+    Light light = Light(Point3(WALL_LEFT +10, 0, BACK/2), 100000);
+    Light light2 = Light(Point3(WALL_RIGHT -1, 0, BACK/2), 100000);
     scene.lights.push_back(light);
 
     scene.takePicture("ppm/scene.ppm");

@@ -86,27 +86,29 @@ float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere) {
 
 float getDistanceBetweenRayAndPlane(const Ray& ray, const Plane& plane) {
     float denom = dotProduct(plane.normal.vector, ray.direction.vector);
-    if (fabs(denom) > 1e-6f) {
+    if (denom != 0) {
         Vector3 po = plane.p.vector - ray.origin.vector;
         float num = dotProduct(po, plane.normal.vector);
         float t = num / denom;
         if (t > 0) {
-            return t; // distance paramétrique le long du rayon
+            return t;
         }
     }
-    return -1.0f; // pas d'intersection
+    return -1.0f;
 }
 
 Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal) {
     Light light = scene.lights[0];
     // std::cout << "normal: " << normal.vector.toString() << std::endl;
-    Vector3 Li = getDirection(objectPoint, light.position).vector;
-    float Lo = dotProduct(normal.vector, Li);
-    float res = 0;
-    if (Lo >= 0) {
+    Vector3 Li = light.position.vector - objectPoint.vector;
+    Li = normalize(Li);
+
+    float Lo = max(0.0f, dotProduct(normal.vector, Li));
+    float attenu =pow(getDistance(objectPoint, light.position), 2);
+    std::cout << "attenu: " << attenu << std::endl;
+    float res = (light.emission / attenu) * Lo;
         // std::cout << "lo: " << Lo << ", Li: " << Li.toString() << std::endl;
-        res = light.emission / pow(getDistance(objectPoint, light.position), 2) * Lo;
-    }
+        // res = light.emission / pow(getDistance(objectPoint, light.position), 2) * Lo;
     // std::cout << "f: " << res << std::endl;
     return color.dimColor(res);
 }
