@@ -16,6 +16,9 @@ Pixel** rayTracing(const Scene& scene) {
         for (int x = 0; x < mainCamera.width; x++) {
             Point3 currentcameraPoint = Point3(mainCamera.center.x - mainCamera.width/2 + x, mainCamera.center.y + mainCamera.height/2 - y, mainCamera.center.z);
             Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
+            // std::cout << "dir z: " << dir.z << std::endl;
+            // dir.z = 1;
+            // std::cout << "dir z après: " << dir.z << std::endl;
             Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
 
             //test sur tous les éléments de la scène pour les détecter
@@ -25,28 +28,32 @@ Pixel** rayTracing(const Scene& scene) {
             Point3 intersectPoint = Point3(0, 0, 0);
             for (Sphere object : scene.spheres) {
                 float d = getDistanceBetweenRayAndSphere(ray, object);
-                if (d < smallerdistance) {
+                if (d > 0 && d < smallerdistance) {
+                    // std::cout << "test1" << std::endl;
                     smallerdistance = d;
                     color = object.color;
-                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * smallerdistance);
+                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
                     normal = getDirection(object.center, intersectPoint);
                 }
             }
             for (Plane object : scene.planes) {
                 float d = getDistanceBetweenRayAndPlane(ray, object);
-                if (d < smallerdistance) {
+                // std::cout << "d: " << d << std::endl;
+                if (d > 0 && d < smallerdistance) {
+                    // std::cout << "d: " << d << ", normal: " << normal.vector.toString() << ", intersectP: " << intersectPoint.vector.toString() << std::endl;
                     smallerdistance = d;
                     color = object.color;
-                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * smallerdistance);
+                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
                     normal = object.normal;
                 }
             }
+            // std::cout << "d: " << smallerdistance << std::endl;
             Color pixelColor;
             if (smallerdistance < mainCamera.rayMaxRange){
                 pixelColor = lightFct(scene, intersectPoint, color, normal);
             }
             data[y][x] = Pixel(pixelColor);
-            // data[y][x] = nearestObject.color.dimColor(1 - smallerdistance / mainCamera.rayMaxRange);
+            // data[y][x] = color.dimColor(1 - smallerdistance / mainCamera.rayMaxRange);
         }
     }
 
@@ -77,26 +84,29 @@ float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere) {
     return t;
 }
 
-float getDistanceBetweenRayAndPlane(Ray ray, Plane plane) {
-    float num = - dotProduct(plane.normal.vector, ray.origin.vector) + dotProduct(plane.normal.vector, plane.p.vector);
+float getDistanceBetweenRayAndPlane(const Ray& ray, const Plane& plane) {
     float denom = dotProduct(plane.normal.vector, ray.direction.vector);
-    if (denom != 0) {
+    if (fabs(denom) > 1e-6f) {
+        Vector3 po = plane.p.vector - ray.origin.vector;
+        float num = dotProduct(po, plane.normal.vector);
         float t = num / denom;
         if (t > 0) {
-            return t;
+            return t; // distance paramétrique le long du rayon
         }
     }
-    return -1;
+    return -1.0f; // pas d'intersection
 }
 
 Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal) {
     Light light = scene.lights[0];
-    Vector3 Li = getDirection(light.position, objectPoint).vector;
+    // std::cout << "normal: " << normal.vector.toString() << std::endl;
+    Vector3 Li = getDirection(objectPoint, light.position).vector;
     float Lo = dotProduct(normal.vector, Li);
-    float f = 0;
+    float res = 0;
     if (Lo >= 0) {
-        f = light.emission / pow(getDistance(objectPoint, light.position), 2) * Lo;
+        // std::cout << "lo: " << Lo << ", Li: " << Li.toString() << std::endl;
+        res = light.emission / pow(getDistance(objectPoint, light.position), 2) * Lo;
     }
-    // std::cout << "f: " << f << std::endl;
-    return color.dimColor(f);
+    // std::cout << "f: " << res << std::endl;
+    return color.dimColor(res);
 }

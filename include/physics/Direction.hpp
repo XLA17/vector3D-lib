@@ -16,6 +16,7 @@ public:
     explicit Direction(Vector3 v);
 
     bool operator==(const Direction& d) const;
+    Direction invert() const;
 
     static const Direction Forward;
     static const Direction Backward;

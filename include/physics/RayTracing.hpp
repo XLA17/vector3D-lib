@@ -11,5 +11,5 @@
 
 Pixel** rayTracing(const Scene& scene);
 float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere);
-float getDistanceBetweenRayAndPlane(Ray ray, Plane plane);
+float getDistanceBetweenRayAndPlane(const Ray& ray, const Plane& plane);
 Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal);

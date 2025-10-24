@@ -10,7 +10,7 @@ Camera::Camera(Point3 center, int width, int fov, float ratioAspect, float rayMa
     fov(fov),
     ratioAspect(ratioAspect),
     rayMaxRange(rayMaxRange),
-    focalPoint(Point3(center.x, center.x, center.z -((width / 2.0) / (tan(fov / 2.0) * acos(-1) / 180.0)))), // acos(-1) = pi
+    focalPoint(Point3(center.x, center.y, center.z -((width / 2.0) / (tan(fov * acos(-1) / 360.0))))), // acos(-1) = pi
     height(float(width) / ratioAspect)
 {
     if (rayMaxRange <= 0) {

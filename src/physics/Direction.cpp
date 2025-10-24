@@ -1,9 +1,9 @@
 #include "physics/Direction.hpp"
 
 
-Direction::Direction(float x, float y, float z)
+Direction::Direction(float _x, float _y, float _z)
 {
-    vector = Vector3(x, y, z).normalize();
+    vector = Vector3(_x, _y, _z).normalize();
     x = vector.x;
     y = vector.y;
     z = vector.z;
@@ -20,6 +20,11 @@ Direction::Direction(Vector3 v)
 bool Direction::operator==(const Direction& d) const
 {
     return (x == d.x && y == d.y && z == d.z);
+}
+
+Direction Direction::invert() const
+{
+    return Direction(-x, -y, -z);
 }
 
 const Direction Direction::Forward = Direction(0, 0, 1);

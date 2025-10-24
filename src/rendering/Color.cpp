@@ -17,6 +17,7 @@ Color::Color(int red, int green, int blue)
 
 Color Color::dimColor(float percentage) const
 {
+    // std::cout << percentage << " " << r << " " << g << " " << b << std::endl;
     return Color(r * percentage, g * percentage, b * percentage);
 }
 
