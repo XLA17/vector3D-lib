@@ -98,17 +98,37 @@ float getDistanceBetweenRayAndPlane(const Ray& ray, const Plane& plane) {
 }
 
 Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal) {
-    Light light = scene.lights[0];
-    // std::cout << "normal: " << normal.vector.toString() << std::endl;
-    Vector3 Li = light.position.vector - objectPoint.vector;
-    Li = normalize(Li);
-
-    float Lo = max(0.0f, dotProduct(normal.vector, Li));
-    float attenu =pow(getDistance(objectPoint, light.position), 2);
-    std::cout << "attenu: " << attenu << std::endl;
-    float res = (light.emission / attenu) * Lo;
-        // std::cout << "lo: " << Lo << ", Li: " << Li.toString() << std::endl;
-        // res = light.emission / pow(getDistance(objectPoint, light.position), 2) * Lo;
-    // std::cout << "f: " << res << std::endl;
+    float res = 0;
+    for (Light light : scene.lights) {
+        if (!checkIfShadow(scene, light, objectPoint)) {
+            Vector3 Li = light.position.vector - objectPoint.vector;
+            Li = normalize(Li);
+            float NdotL = max(0.0f, dotProduct(normal.vector, Li));
+            res += light.emission / pow(getDistance(objectPoint, light.position), 2) * NdotL;
+        }
+    }
     return color.dimColor(res);
+}
+
+bool checkIfShadow(const Scene& scene, Light light, Point3 objectPoint) {
+    const float EPSILON = 1e-3f; // pour éliminer le bruit causés les arrondis des floats
+    Direction dir = getDirection(objectPoint, light.position);
+    Ray ray = Ray(Point3(objectPoint.vector + dir.vector * EPSILON), dir, scene.camera.rayMaxRange);
+
+    float smallerdistance = getDistance(light.position, objectPoint) - EPSILON;
+
+    for (Sphere sphere : scene.spheres) {
+        float d = getDistanceBetweenRayAndSphere(ray, sphere);
+        if (d > EPSILON && d < smallerdistance && !objectPoint.isConcidentWith(Point3(ray.origin.vector + ray.direction.vector * d))){
+            return true;
+        }
+    }
+    for (Plane plane : scene.planes) {
+        float d = getDistanceBetweenRayAndPlane(ray, plane);
+        if (d > EPSILON && d < smallerdistance && !objectPoint.isConcidentWith(Point3(ray.origin.vector + ray.direction.vector * d))) {
+            return true;
+        }
+    }
+
+    return false;
 }

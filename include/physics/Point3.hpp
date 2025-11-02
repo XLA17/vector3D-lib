@@ -13,5 +13,7 @@ public:
     Point3(float x, float y, float z);
     explicit Point3(Vector3 v);
 
+    bool isConcidentWith(Point3 p);
+
     static const Point3 Origin;
 };

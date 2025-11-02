@@ -16,20 +16,20 @@ int main()
     const Point3 cameraCenter = Point3::Origin;
     const float rayMaxRange = 1000;
     Camera mainCamera = Camera(cameraCenter, screenWidth, fov, ratioAspect, rayMaxRange);
-    const int WALL_LEFT = -screenWidth/2;
-    const int WALL_RIGHT = screenWidth/2;
+    const int WALL_LEFT = -screenWidth/2 -1;
+    const int WALL_RIGHT = screenWidth/2 + 1;
     const int CEILLING = mainCamera.height/2;
     const int GROUND = -mainCamera.height/2;
-    const int BACK = 500;
+    const int BACK = 800;
 
     Scene scene = Scene(mainCamera);
 
-    Point3 s1Center = Point3(-165, 0, 300);
+    Point3 s1Center = Point3(-165, 100, 200);
     float s1Radius = 150;
     Sphere s1 = Sphere(s1Center, s1Radius, Color::Red);
     scene.spheres.push_back(s1);
 
-    Point3 s2Center = Point3(165, 0, 600);
+    Point3 s2Center = Point3(165, -50, 600);
     float s2Radius = 150;
     Sphere s2 = Sphere(s2Center, s2Radius, Color::Blue);
     scene.spheres.push_back(s2);
@@ -46,8 +46,9 @@ int main()
     scene.planes.push_back(pBack);
 
     Light light = Light(Point3(WALL_LEFT +10, 0, BACK/2), 100000);
-    Light light2 = Light(Point3(WALL_RIGHT -1, 0, BACK/2), 100000);
+    Light light2 = Light(Point3(WALL_RIGHT -10, 0, BACK/2), 100000);
     scene.lights.push_back(light);
+    scene.lights.push_back(light2);
 
     scene.takePicture("ppm/scene.ppm");
 
