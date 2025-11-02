@@ -9,8 +9,9 @@
 #include "rendering/Scene.hpp"
 #include "rendering/Color.hpp"
 
-Pixel** rayTracing(const Scene& scene);
+Pixel** rayTracing(const Scene& scene, int sampling);
 float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere);
 float getDistanceBetweenRayAndPlane(const Ray& ray, const Plane& plane);
 Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal);
 bool checkIfShadow(const Scene& scene, Light light, Point3 objectPoint);
+double random_double();

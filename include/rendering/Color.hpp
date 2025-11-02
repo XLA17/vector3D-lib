@@ -12,6 +12,9 @@ public:
     Color();
     Color(int red, int green, int blue);
     Color dimColor(float percentage) const;
+    Color operator+(const Color& c) const;
+    Color operator/(float f) const;
+    void operator+=(const Color& c);
     std::string toString() const;
 
     static const Color Black;

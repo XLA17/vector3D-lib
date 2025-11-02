@@ -20,6 +20,23 @@ Color Color::dimColor(float percentage) const
     return Color(r * percentage, g * percentage, b * percentage);
 }
 
+Color Color::operator+(const Color& c) const
+{
+    return Color(r + c.r, g + c.g, b + c.b);
+}
+
+Color Color::operator/(float f) const
+{
+    return Color(r / f, g / f, b / f);
+}
+
+void Color::operator+=(const Color& c)
+{
+    r += c.r;
+    g += c.g;
+    b += c.b;
+}
+
 std::string Color::toString() const
 {
     std::ostringstream ss;

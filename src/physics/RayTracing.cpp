@@ -1,9 +1,10 @@
 #include <cfloat>
+#include <random>
 
 #include "physics/RayTracing.hpp"
 #include "physics/utils/VectorUtils.hpp"
 
-Pixel** rayTracing(const Scene& scene) {
+Pixel** rayTracing(const Scene& scene, int sampling) {
     Camera mainCamera = scene.camera;
 
     // Génération du tableau en 2 dimensions de pixels
@@ -14,46 +15,41 @@ Pixel** rayTracing(const Scene& scene) {
     
     for (int y = 0; y < mainCamera.height; y++) {
         for (int x = 0; x < mainCamera.width; x++) {
-            Point3 currentcameraPoint = Point3(mainCamera.center.x - mainCamera.width/2 + x, mainCamera.center.y + mainCamera.height/2 - y, mainCamera.center.z);
-            Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
-            // std::cout << "dir z: " << dir.z << std::endl;
-            // dir.z = 1;
-            // std::cout << "dir z après: " << dir.z << std::endl;
-            Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
-
-            //test sur tous les éléments de la scène pour les détecter
-            float smallerdistance = mainCamera.rayMaxRange;
-            Direction normal = Direction::Down; // TODO: update with abstract class object
-            Color color = Color::Black;
-            Point3 intersectPoint = Point3(0, 0, 0);
-            for (Sphere object : scene.spheres) {
-                float d = getDistanceBetweenRayAndSphere(ray, object);
-                if (d > 0 && d < smallerdistance) {
-                    // std::cout << "test1" << std::endl;
-                    smallerdistance = d;
-                    color = object.color;
-                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                    normal = getDirection(object.center, intersectPoint);
-                }
-            }
-            for (Plane object : scene.planes) {
-                float d = getDistanceBetweenRayAndPlane(ray, object);
-                // std::cout << "d: " << d << std::endl;
-                if (d > 0 && d < smallerdistance) {
-                    // std::cout << "d: " << d << ", normal: " << normal.vector.toString() << ", intersectP: " << intersectPoint.vector.toString() << std::endl;
-                    smallerdistance = d;
-                    color = object.color;
-                    intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                    normal = object.normal;
-                }
-            }
-            // std::cout << "d: " << smallerdistance << std::endl;
             Color pixelColor;
-            if (smallerdistance < mainCamera.rayMaxRange){
-                pixelColor = lightFct(scene, intersectPoint, color, normal);
+            for (int i = 0; i < sampling; i++) {
+                Point3 currentcameraPoint = Point3(mainCamera.center.x - mainCamera.width/2 + x + random_double(), mainCamera.center.y + mainCamera.height/2 - y + random_double(), mainCamera.center.z);
+                Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
+                Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
+
+                //test sur tous les éléments de la scène pour les détecter
+                float smallerdistance = mainCamera.rayMaxRange;
+                Direction normal = Direction::Down; // TODO: update with abstract class object
+                Color color = Color::Black;
+                Point3 intersectPoint = Point3(0, 0, 0);
+                for (Sphere object : scene.spheres) {
+                    float d = getDistanceBetweenRayAndSphere(ray, object);
+                    if (d > 0 && d < smallerdistance) {
+                        smallerdistance = d;
+                        color = object.color;
+                        intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
+                        normal = getDirection(object.center, intersectPoint);
+                    }
+                }
+                for (Plane object : scene.planes) {
+                    float d = getDistanceBetweenRayAndPlane(ray, object);
+                    if (d > 0 && d < smallerdistance) {
+                        smallerdistance = d;
+                        color = object.color;
+                        intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
+                        normal = object.normal;
+                    }
+                }
+                if (smallerdistance < mainCamera.rayMaxRange){
+                    pixelColor += lightFct(scene, intersectPoint, color, normal);
+                }
             }
+            pixelColor = pixelColor / sampling;
             data[y][x] = Pixel(pixelColor);
-            // data[y][x] = color.dimColor(1 - smallerdistance / mainCamera.rayMaxRange);
         }
     }
 
@@ -131,4 +127,10 @@ bool checkIfShadow(const Scene& scene, Light light, Point3 objectPoint) {
     }
 
     return false;
+}
+
+double random_double() {
+    static std::mt19937 gen(std::random_device{}());  // générateur global
+    static std::uniform_real_distribution<double> dist(0.0, 1.0);
+    return dist(gen);
 }
