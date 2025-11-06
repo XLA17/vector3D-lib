@@ -1,4 +1,5 @@
 #include "physics/utils/VectorUtils.hpp"
+#include "physics/utils/Random.hpp"
 
 
 float dotProduct(const Vector3& v1, const Vector3& v2)
@@ -32,4 +33,20 @@ Direction getDirection(const Point3& fromPoint, const Point3& toPoint)
 float getDistance(const Point3& fromPoint, const Point3& toPoint)
 {
     return Vector3(toPoint.x - fromPoint.x, toPoint.y - fromPoint.y, toPoint.z - fromPoint.z).length;
+}
+
+Direction getRandomDir()
+{
+    while (true) {
+        Vector3 v = Vector3(randomDouble(-1, 1), randomDouble(-1, 1), randomDouble(-1, 1));
+        if (v.length >= 1e-10 && v.length <= 1) {
+            return Direction(v);
+        }
+    }
+}
+
+Direction getReflection(const Direction& rayDirection, const Direction& normal)
+{
+    Vector3 v = rayDirection.vector - normal.vector * dotProduct(rayDirection.vector, normal.vector) * 2;
+    return Direction(v);
 }

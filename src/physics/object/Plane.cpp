@@ -1,5 +1,5 @@
 #include "physics/object/Plane.hpp"
 
 
-Plane::Plane(Point3 p, Direction normal, Color color)
-    : p(p), normal(normal), color(color) {}
+Plane::Plane(Point3 p, Direction normal, Material material)
+    : p(p), normal(normal), material(material) {}
