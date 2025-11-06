@@ -26,22 +26,31 @@ Pixel** rayTracing(const Scene& scene, int sampling) {
                 Direction normal = Direction::Down; // TODO: update with abstract class object
                 Material material = Material(Color::Black, 0, 0);
                 Point3 intersectPoint = Point3(0, 0, 0);
-                for (Sphere object : scene.spheres) {
-                    float d = getDistanceBetweenRayAndSphere(ray, object);
+                // for (Sphere object : scene.spheres) {
+                //     float d = getDistanceBetweenRayAndSphere(ray, object);
+                //     if (d > 0 && d < smallerdistance) {
+                //         smallerdistance = d;
+                //         material = object.material;
+                //         intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
+                //         normal = getDirection(object.center, intersectPoint);
+                //     }
+                // }
+                // for (Plane object : scene.planes) {
+                //     float d = getDistanceBetweenRayAndPlane(ray, object);
+                //     if (d > 0 && d < smallerdistance) {
+                //         smallerdistance = d;
+                //         material = object.material;
+                //         intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
+                //         normal = object.normal;
+                //     }
+                // }
+                for (const auto& object : scene.objects) {
+                    float d = object->intersectionWithRay(ray);
                     if (d > 0 && d < smallerdistance) {
                         smallerdistance = d;
-                        material = object.material;
+                        material = object->material;
                         intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                        normal = getDirection(object.center, intersectPoint);
-                    }
-                }
-                for (Plane object : scene.planes) {
-                    float d = getDistanceBetweenRayAndPlane(ray, object);
-                    if (d > 0 && d < smallerdistance) {
-                        smallerdistance = d;
-                        material = object.material;
-                        intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                        normal = object.normal;
+                        normal = object->getNormal(intersectPoint);
                     }
                 }
                 if (smallerdistance < mainCamera.rayMaxRange){
@@ -54,22 +63,31 @@ Pixel** rayTracing(const Scene& scene, int sampling) {
                 smallerdistance = mainCamera.rayMaxRange;
                 Material material2 = Material(Color::Black, 0, 0);
 
-                for (Sphere object : scene.spheres) {
-                    float d = getDistanceBetweenRayAndSphere(reflecRay, object);
+                // for (Sphere object : scene.spheres) {
+                //     float d = getDistanceBetweenRayAndSphere(reflecRay, object);
+                //     if (d > 0 && d < smallerdistance) {
+                //         smallerdistance = d;
+                //         material2 = object.material;
+                //         intersectPoint = Point3(reflecRay.origin.vector + reflecRay.direction.vector * d);
+                //         normal = getDirection(object.center, intersectPoint);
+                //     }
+                // }
+                // for (Plane object : scene.planes) {
+                //     float d = getDistanceBetweenRayAndPlane(reflecRay, object);
+                //     if (d > 0 && d < smallerdistance) {
+                //         smallerdistance = d;
+                //         material2 = object.material;
+                //         intersectPoint = Point3(reflecRay.origin.vector + reflecRay.direction.vector * d);
+                //         normal = object.normal;
+                //     }
+                // }
+                for (const auto& object : scene.objects) {
+                    float d = object->intersectionWithRay(ray);
                     if (d > 0 && d < smallerdistance) {
                         smallerdistance = d;
-                        material2 = object.material;
-                        intersectPoint = Point3(reflecRay.origin.vector + reflecRay.direction.vector * d);
-                        normal = getDirection(object.center, intersectPoint);
-                    }
-                }
-                for (Plane object : scene.planes) {
-                    float d = getDistanceBetweenRayAndPlane(reflecRay, object);
-                    if (d > 0 && d < smallerdistance) {
-                        smallerdistance = d;
-                        material2 = object.material;
-                        intersectPoint = Point3(reflecRay.origin.vector + reflecRay.direction.vector * d);
-                        normal = object.normal;
+                        material = object->material;
+                        intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
+                        normal = object->getNormal(intersectPoint);
                     }
                 }
                 if (smallerdistance < mainCamera.rayMaxRange){
