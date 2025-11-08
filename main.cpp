@@ -26,8 +26,8 @@ int main()
     const int GROUND = -mainCamera.height/2;
     const int BACK = 800;
 
-    Material red100(Color::Red, 1, 1);
-    Material red50(Color::Red, 1, 0);
+    Material red100(Color::Red, 1, 0.9);
+    Material red50(Color::Red, 1, 1);
     // Material blue100(Color::Blue, 1, 0);
     Material white100(Color::White, 1, 1);
 
@@ -39,28 +39,17 @@ int main()
 
     Point3 s2Center = Point3(165, -50, 600);
     float s2Radius = 150;
-    // Sphere s2 = Sphere(s2Center, s2Radius, red50);
-    // scene.spheres.push_back(s2);
     add_object<Sphere>(scene.objects, s2Center, s2Radius, red100);
 
-    // Plane pUp = Plane(Point3(0, CEILLING, 0), Direction::Down, white100);
-    // Plane pDown = Plane(Point3(0, GROUND, 0), Direction::Up, white100);
-    // Plane pLeft = Plane(Point3(WALL_LEFT, 0, 0), Direction::Right, white100);
-    // Plane pRight = Plane(Point3(WALL_RIGHT, 0, 0), Direction::Left, white100);
-    // Plane pBack = Plane(Point3(0, 0, BACK), Direction::Backward, white100);
     add_object<Plane>(scene.objects, Point3(0, CEILLING, 0), Direction::Down, white100);
     add_object<Plane>(scene.objects, Point3(0, GROUND, 0), Direction::Up, white100);
     add_object<Plane>(scene.objects, Point3(WALL_LEFT, 0, 0), Direction::Right, white100);
     add_object<Plane>(scene.objects, Point3(WALL_RIGHT, 0, 0), Direction::Left, white100);
     add_object<Plane>(scene.objects, Point3(0, 0, BACK), Direction::Backward, white100);
-    // scene.planes.push_back(pUp);
-    // scene.planes.push_back(pDown);
-    // scene.planes.push_back(pLeft);
-    // scene.planes.push_back(pRight);
-    // scene.planes.push_back(pBack);
 
-    Light light = Light(Point3(WALL_LEFT +10, 0, BACK/2), 100000);
-    Light light2 = Light(Point3(WALL_RIGHT -10, 0, BACK/2), 100000);
+    float intensity = 100000;
+    Light light = Light(Point3(WALL_LEFT +10, 0, BACK/2), intensity, sqrt(intensity));
+    Light light2 = Light(Point3(WALL_RIGHT -10, 0, BACK/2), intensity, sqrt(intensity));
     scene.lights.push_back(light);
     scene.lights.push_back(light2);
 

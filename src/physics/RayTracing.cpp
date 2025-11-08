@@ -4,7 +4,7 @@
 #include "physics/utils/VectorUtils.hpp"
 #include "physics/utils/Random.hpp"
 
-Pixel** rayTracing(const Scene& scene, int sampling) {
+Pixel** rayTracing(const Scene& scene, int sampling, int reflectCount) {
     Camera mainCamera = scene.camera;
 
     // Génération du tableau en 2 dimensions de pixels
@@ -21,78 +21,7 @@ Pixel** rayTracing(const Scene& scene, int sampling) {
                 Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
                 Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
 
-                //test sur tous les éléments de la scène pour les détecter
-                float smallerdistance = mainCamera.rayMaxRange;
-                Direction normal = Direction::Down; // TODO: update with abstract class object
-                Material material = Material(Color::Black, 0, 0);
-                Point3 intersectPoint = Point3(0, 0, 0);
-                // for (Sphere object : scene.spheres) {
-                //     float d = getDistanceBetweenRayAndSphere(ray, object);
-                //     if (d > 0 && d < smallerdistance) {
-                //         smallerdistance = d;
-                //         material = object.material;
-                //         intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                //         normal = getDirection(object.center, intersectPoint);
-                //     }
-                // }
-                // for (Plane object : scene.planes) {
-                //     float d = getDistanceBetweenRayAndPlane(ray, object);
-                //     if (d > 0 && d < smallerdistance) {
-                //         smallerdistance = d;
-                //         material = object.material;
-                //         intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                //         normal = object.normal;
-                //     }
-                // }
-                for (const auto& object : scene.objects) {
-                    float d = object->intersectionWithRay(ray);
-                    if (d > 0 && d < smallerdistance) {
-                        smallerdistance = d;
-                        material = object->material;
-                        intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                        normal = object->getNormal(intersectPoint);
-                    }
-                }
-                if (smallerdistance < mainCamera.rayMaxRange){
-                    pixelColor += lightFct(scene, intersectPoint, material.color, normal) * material.roughness;
-                }
-
-                const float EPSILON = 1e-2f;
-                Direction reflectDir = getReflection(dir, normal);
-                Ray reflecRay = Ray(Point3(intersectPoint.vector + reflectDir.vector * EPSILON), reflectDir, mainCamera.rayMaxRange);
-                smallerdistance = mainCamera.rayMaxRange;
-                Material material2 = Material(Color::Black, 0, 0);
-
-                // for (Sphere object : scene.spheres) {
-                //     float d = getDistanceBetweenRayAndSphere(reflecRay, object);
-                //     if (d > 0 && d < smallerdistance) {
-                //         smallerdistance = d;
-                //         material2 = object.material;
-                //         intersectPoint = Point3(reflecRay.origin.vector + reflecRay.direction.vector * d);
-                //         normal = getDirection(object.center, intersectPoint);
-                //     }
-                // }
-                // for (Plane object : scene.planes) {
-                //     float d = getDistanceBetweenRayAndPlane(reflecRay, object);
-                //     if (d > 0 && d < smallerdistance) {
-                //         smallerdistance = d;
-                //         material2 = object.material;
-                //         intersectPoint = Point3(reflecRay.origin.vector + reflecRay.direction.vector * d);
-                //         normal = object.normal;
-                //     }
-                // }
-                for (const auto& object : scene.objects) {
-                    float d = object->intersectionWithRay(ray);
-                    if (d > 0 && d < smallerdistance) {
-                        smallerdistance = d;
-                        material = object->material;
-                        intersectPoint = Point3(ray.origin.vector + ray.direction.vector * d);
-                        normal = object->getNormal(intersectPoint);
-                    }
-                }
-                if (smallerdistance < mainCamera.rayMaxRange){
-                    pixelColor += lightFct(scene, intersectPoint, material2.color, normal) * (1 - material.roughness);
-                }
+                pixelColor += getOutgoingColorReflect(reflectCount, ray, scene);
             }
 
             pixelColor = pixelColor / sampling;
@@ -101,77 +30,90 @@ Pixel** rayTracing(const Scene& scene, int sampling) {
     }
 
     return data;
-};
-
-float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere) {
-    // equation : A*t² + B*t + C = 0
-    Vector3 co = ray.origin.vector - sphere.center.vector;
-    float A = dotProduct(ray.direction.vector, ray.direction.vector); // TODO: simplify because it's always 1 because direction is normalized
-    float B = 2 * dotProduct(ray.direction.vector, co);
-    float C = dotProduct(co, co) - pow(sphere.radius, 2);
-
-    float delta = pow(B, 2) - 4 * A * C;
-
-    float t = -1;
-    if (delta >= 0) {
-        float t1 = (-B - sqrt(delta)) / (2*A);
-        float t2 = (-B + sqrt(delta)) / (2*A);
-
-        if (t1 > 0) {
-            t = t1;
-        } else if (t2 > 0) {
-            t = t2;
-        }
-    }
-
-    return t;
 }
 
-float getDistanceBetweenRayAndPlane(const Ray& ray, const Plane& plane) {
-    float denom = dotProduct(plane.normal.vector, ray.direction.vector);
-    if (denom != 0) {
-        Vector3 po = plane.p.vector - ray.origin.vector;
-        float num = dotProduct(po, plane.normal.vector);
-        float t = num / denom;
-        if (t > 0) {
-            return t;
+std::unique_ptr<HitPointData> rayCast(const Ray& ray, const std::vector<std::unique_ptr<Object>>& objectsToCheck) {
+    float smallerdistance = ray.maxRange;
+    std::unique_ptr<HitPointData> intersectionPoint;
+    for (const auto& object : objectsToCheck) {
+        float d = object->intersectionWithRay(ray);
+        if (d > 0 && d < smallerdistance) {
+            smallerdistance = d;
+            Point3 point = Point3(ray.origin.vector + ray.direction.vector * d);
+            intersectionPoint = std::make_unique<HitPointData>(point, object->getNormal(point), object->material);
         }
     }
-    return -1.0f;
+
+    return intersectionPoint;
 }
 
-Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal) {
-    float res = 0;
-    for (Light light : scene.lights) {
-        if (!checkIfShadow(scene, light, objectPoint)) {
-            Vector3 Li = light.position.vector - objectPoint.vector;
-            Li = normalize(Li);
-            float NdotL = max(0.0f, dotProduct(normal.vector, Li));
-            res += light.emission / pow(getDistance(objectPoint, light.position), 2) * NdotL;
+float getOutgoingLight(const HitPointData& from, const std::vector<Light>& lights, const std::vector<std::unique_ptr<Object>>& objects) {
+    float outgoingLight; // TODO: add the light emitted by the surface
+    const float epsilon = 1e-3f; // to eliminate the noise
+    Point3 point = Point3(from.point.vector + from.normal.vector * epsilon); // we add an offset to the point along the normal
+
+    for (Light light : lights) {
+        Direction lightRayDir = getDirection(point, light.position);
+        float lightToPointDistance = getDistance(light.position, point);
+        Ray lightRay = Ray(point, lightRayDir, lightToPointDistance);
+        if (!checkIfShadow(point, epsilon, lightRay, objects)) {
+            float incomingLight = max(0.0f, dotProduct(from.normal.vector, lightRayDir.vector)) * light.emission / pow(getDistance(from.point, light.position), 2);
+            outgoingLight += incomingLight;
+        } else {
+
         }
     }
-    return color * res;
+
+    return outgoingLight;
 }
 
-bool checkIfShadow(const Scene& scene, Light light, Point3 objectPoint) {
-    const float EPSILON = 1e-3f; // pour éliminer le bruit causés les arrondis des floats
-    Direction dir = getDirection(objectPoint, light.position);
-    Ray ray = Ray(Point3(objectPoint.vector + dir.vector * EPSILON), dir, scene.camera.rayMaxRange);
+bool checkIfShadow(const Point3& point, float eps, const Ray& ray, const std::vector<std::unique_ptr<Object>>& objects) {
+    float smallerdistance = ray.maxRange - eps;
 
-    float smallerdistance = getDistance(light.position, objectPoint) - EPSILON;
-
-    for (Sphere sphere : scene.spheres) {
-        float d = getDistanceBetweenRayAndSphere(ray, sphere);
-        if (d > EPSILON && d < smallerdistance && !objectPoint.isConcidentWith(Point3(ray.origin.vector + ray.direction.vector * d))){
-            return true;
-        }
-    }
-    for (Plane plane : scene.planes) {
-        float d = getDistanceBetweenRayAndPlane(ray, plane);
-        if (d > EPSILON && d < smallerdistance && !objectPoint.isConcidentWith(Point3(ray.origin.vector + ray.direction.vector * d))) {
+    for (const auto& object : objects) {
+        float d = object->intersectionWithRay(ray);
+        if (d > eps && d < smallerdistance){
             return true;
         }
     }
 
     return false;
+}
+
+Color getOutgoingColorReflect(int reflectCount, const Ray& ray, const Scene& scene) { // recursive
+    if (reflectCount <= 0) { // normalement jamais atteint
+        std::cout << "reflectCount <= 0" << std::endl;
+        return Color::Black;
+    }
+
+    //test sur tous les éléments de la scène pour les détecter
+    auto hitPointData_ptr = rayCast(ray, scene.objects);
+    if (hitPointData_ptr){
+        Color color;
+        if (hitPointData_ptr->objectMaterial.roughness != 0) {
+            float lightQty = getOutgoingLight(*hitPointData_ptr, scene.lights, scene.objects) * hitPointData_ptr->objectMaterial.roughness;
+            color = hitPointData_ptr->objectMaterial.color * lightQty;
+        }
+
+
+        if (hitPointData_ptr->objectMaterial.roughness != 1) {
+            const float epsilon = 1e-3f;
+            Direction reflectDir = getReflection(ray.direction, hitPointData_ptr->normal);
+            Ray reflecRay = Ray(Point3(hitPointData_ptr->point.vector + hitPointData_ptr->normal.vector * epsilon), reflectDir, ray.maxRange);
+
+            auto newHitPointData_ptr = rayCast(reflecRay, scene.objects);
+            if (newHitPointData_ptr){
+                float lightQty = getOutgoingLight(*newHitPointData_ptr, scene.lights, scene.objects) * (1 - hitPointData_ptr->objectMaterial.roughness);
+                if (reflectCount == 1) {
+                    color += newHitPointData_ptr->objectMaterial.color * lightQty;
+                } else {
+                    color += getOutgoingColorReflect(reflectCount - 1, reflecRay, scene) * lightQty;
+                }
+            }
+        }
+
+        return color;
+    }
+
+    return Color::Black;
 }

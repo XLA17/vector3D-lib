@@ -7,6 +7,7 @@ class Light {
 public:
     Point3 position;
     float emission;
+    float maxRange;
 
-    Light(Point3 position, float emission);
+    Light(Point3 position, float emission, float maxRange);
 };

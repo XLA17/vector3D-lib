@@ -7,5 +7,5 @@ Scene::Scene(Camera camera)
     : camera(camera) {}
 
 void Scene::takePicture(const char* filename) {
-    writeImagePPM(camera.width, camera.height, rayTracing(*this, 1), filename);
+    writeImagePPM(camera.width, camera.height, rayTracing(*this, 16, 3), filename);
 }

@@ -4,13 +4,14 @@
 
 #include "physics/object/Sphere.hpp"
 #include "physics/Ray.hpp"
+#include "physics/HitPointData.hpp"
 #include "physics/Point3.hpp"
 #include "rendering/Pixel.hpp"
 #include "rendering/Scene.hpp"
 #include "rendering/Color.hpp"
 
-Pixel** rayTracing(const Scene& scene, int sampling);
-float getDistanceBetweenRayAndSphere(Ray ray, Sphere sphere);
-float getDistanceBetweenRayAndPlane(const Ray& ray, const Plane& plane);
-Color lightFct(const Scene& scene, Point3 objectPoint, Color color, Direction normal);
-bool checkIfShadow(const Scene& scene, Light light, Point3 objectPoint);
+Pixel** rayTracing(const Scene& scene, int sampling, int reflectCount);
+bool checkIfShadow(const Point3& point, float eps, const Ray& ray, const std::vector<std::unique_ptr<Object>>& objects);
+std::unique_ptr<HitPointData> rayCast(const Ray& ray, const std::vector<std::unique_ptr<Object>>& objectsToCheck);
+float getOutgoingLight(const HitPointData& from, const std::vector<Light>& lights, const std::vector<std::unique_ptr<Object>>& objects);
+Color getOutgoingColorReflect(int reflectCount, const Ray& ray, const Scene& scene);
