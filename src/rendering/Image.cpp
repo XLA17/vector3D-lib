@@ -1,6 +1,6 @@
 #include "rendering/Image.hpp"
 
-void writeImagePPM(int width, int height, Pixel** data, const char* filename)
+void writeImagePPM(int width, int height, std::vector<Pixel> data, const char* filename)
 {
     std::ofstream file(filename);
     if (!file) {
@@ -14,7 +14,8 @@ void writeImagePPM(int width, int height, Pixel** data, const char* filename)
 
     for (int j = 0; j < height; ++j) {
         for (int i = 0; i < width; ++i) {
-            file << data[j][i].color.r << " " << data[j][i].color.g << " " << data[j][i].color.b << "  ";
+            int index = j * width + i;
+            file << data[index].color.r << " " << data[index].color.g << " " << data[index].color.b << "  ";
         }
         file << "\n";
     }

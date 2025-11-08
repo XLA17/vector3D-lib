@@ -4,14 +4,10 @@
 #include "physics/utils/VectorUtils.hpp"
 #include "physics/utils/Random.hpp"
 
-Pixel** rayTracing(const Scene& scene, int sampling, int reflectCount) {
+std::vector<Pixel> rayTracing(const Scene& scene, int sampling, int reflectCount) {
     Camera mainCamera = scene.camera;
 
-    // Génération du tableau en 2 dimensions de pixels
-    Pixel** data = new Pixel*[mainCamera.height];
-    for (int i = 0; i < mainCamera.height; ++i) {
-        data[i] = new Pixel[mainCamera.width];
-    }
+    std::vector<Pixel> data(mainCamera.width * mainCamera.height);
     
     for (int y = 0; y < mainCamera.height; y++) {
         for (int x = 0; x < mainCamera.width; x++) {
@@ -25,7 +21,7 @@ Pixel** rayTracing(const Scene& scene, int sampling, int reflectCount) {
             }
 
             pixelColor = pixelColor / sampling;
-            data[y][x] = Pixel(pixelColor);
+            data[y * mainCamera.width + x] = Pixel(pixelColor);
         }
     }
 
