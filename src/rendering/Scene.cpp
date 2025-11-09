@@ -6,6 +6,6 @@
 Scene::Scene(Camera camera)
     : camera(camera) {}
 
-void Scene::takePicture(const char* filename) {
-    writeImagePPM(camera.width, camera.height, rayTracing(*this, 16, 3), filename);
+void Scene::takePicture(const char* filename, int samplingAntiAliasing, int reflectCount) {
+    writeImagePPM(camera.pixelPerRow, camera.pixelPerColumn, rayTracing(*this, samplingAntiAliasing, reflectCount), filename);
 }

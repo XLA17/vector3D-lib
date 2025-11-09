@@ -4,19 +4,20 @@
 #include "rendering/Camera.hpp"
 
 
-Camera::Camera(Point3 center, int width, int fov, float ratioAspect, float rayMaxRange)
+Camera::Camera(Point3 center, float cameraWidth, int pixelPerRow, int fov, float ratioAspect, float rayMaxRange)
     : center(center),
-    width(width),
+    cameraWidth(cameraWidth),
+    cameraHeight(float(cameraWidth) / ratioAspect),
+    pixelPerRow(pixelPerRow),
+    pixelPerColumn(float(pixelPerRow) / ratioAspect),
     fov(fov),
     ratioAspect(ratioAspect),
     rayMaxRange(rayMaxRange),
-    focalPoint(Point3(center.x, center.y, center.z -((width / 2.0) / (tan(fov * acos(-1) / 360.0))))), // acos(-1) = pi
-    height(float(width) / ratioAspect)
+    focalPoint(Point3(center.x, center.y, center.z -((cameraWidth / 2.0) / (tan(fov * acos(-1) / 360.0))))) // acos(-1) = pi
 {
     if (rayMaxRange <= 0) {
         throw std::runtime_error("rayMaxRange must be > 0");
     }
-    // std::cout << float(width) / ratioAspect << std::endl;
 }
 
 std::string Camera::toString() const
@@ -24,8 +25,10 @@ std::string Camera::toString() const
     std::ostringstream ss;
     ss << "\n --- Camera --- :\n"
         << "center: " << center.vector.toString() << "\n"
-        << "width: " << width << "\n"
-        << "height: " << height << "\n"
+        << "camera width: " << cameraWidth << "\n"
+        << "camera height: " << cameraHeight << "\n"
+        << "pixel per row: " << pixelPerRow << "\n"
+        << "pixel per column: " << pixelPerColumn << "\n"
         << "fov: " << fov << "\n"
         << "ratio aspect: " << ratioAspect << "\n"
         << "focal point: " << focalPoint.vector.toString() << "\n"

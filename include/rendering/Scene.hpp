@@ -20,5 +20,5 @@ public:
     Scene(Camera camera);
 
     // Save an image of what the camera is capturing
-    void takePicture(const char* filename);
+    void takePicture(const char* filename, int samplingAntiAliasing, int reflectCount);
 };

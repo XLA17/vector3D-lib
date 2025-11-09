@@ -5,13 +5,15 @@
 class Camera {
 public:
     Point3 center;
-    int width;
-    int height;
+    float cameraWidth;
+    float cameraHeight;
+    int pixelPerRow;
+    int pixelPerColumn;
     int fov;
     float ratioAspect;
     Point3 focalPoint;
     float rayMaxRange;
 
-    Camera(Point3 center, int width, int fov, float ratioAspect, float rayMaxRange);
+    Camera(Point3 center, float cameraWidth, int pixelPerRow, int fov, float ratioAspect, float rayMaxRange);
     std::string toString() const;
 };

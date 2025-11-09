@@ -12,8 +12,8 @@ void writeImagePPM(int width, int height, std::vector<Pixel> data, const char* f
     file << width << " " << height << "\n";
     file << "255\n";
 
-    for (int j = 0; j < height; ++j) {
-        for (int i = 0; i < width; ++i) {
+    for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
             int index = j * width + i;
             file << data[index].color.r << " " << data[index].color.g << " " << data[index].color.b << "  ";
         }

@@ -7,13 +7,18 @@
 std::vector<Pixel> rayTracing(const Scene& scene, int sampling, int reflectCount) {
     Camera mainCamera = scene.camera;
 
-    std::vector<Pixel> data(mainCamera.width * mainCamera.height);
+    std::vector<Pixel> data(mainCamera.pixelPerRow * mainCamera.pixelPerColumn);
     
-    for (int y = 0; y < mainCamera.height; y++) {
-        for (int x = 0; x < mainCamera.width; x++) {
+    float uniteX = mainCamera.cameraWidth / mainCamera.pixelPerRow;
+    float uniteY = mainCamera.cameraHeight / mainCamera.pixelPerColumn;
+    for (int y = 0; y < mainCamera.pixelPerColumn; y++) {
+        for (int x = 0; x < mainCamera.pixelPerRow; x++) {
             Color pixelColor;
-            for (int i = 0; i < sampling; i++) {
-                Point3 currentcameraPoint = Point3(mainCamera.center.x - mainCamera.width/2 + x + randomDouble(0, 1), mainCamera.center.y + mainCamera.height/2 - y + randomDouble(0, 1), mainCamera.center.z);
+            for (int _ = 0; _ < sampling; _++) {
+                float x1 = mainCamera.center.x - mainCamera.cameraWidth/2 + uniteX * x + randomDouble(0, uniteX);
+                float y1 = mainCamera.center.y + mainCamera.cameraHeight/2 - uniteY * y + randomDouble(0, uniteY);
+
+                Point3 currentcameraPoint = Point3(x1, y1, mainCamera.center.z);
                 Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
                 Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
 
@@ -21,7 +26,7 @@ std::vector<Pixel> rayTracing(const Scene& scene, int sampling, int reflectCount
             }
 
             pixelColor = pixelColor / sampling;
-            data[y * mainCamera.width + x] = Pixel(pixelColor);
+            data[y * mainCamera.pixelPerRow + x] = Pixel(pixelColor);
         }
     }
 
