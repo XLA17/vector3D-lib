@@ -37,7 +37,10 @@ float getDistance(const Point3& fromPoint, const Point3& toPoint)
 
 Direction getRandomDir()
 {
+    int inc = 0;
     while (true) {
+        inc++;
+        // std::cout << inc << "\n";
         Vector3 v = Vector3(randomDouble(-1, 1), randomDouble(-1, 1), randomDouble(-1, 1));
         if (v.length >= 1e-10 && v.length <= 1) {
             return Direction(v);

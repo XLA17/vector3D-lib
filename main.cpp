@@ -19,10 +19,10 @@ int main()
 
     const float fov = 90;
     const float screenWidth = 100;
-    const int pixelPerRows = 1080;
+    const int pixelPerRows = 560;
     const float ratioAspect = 16./9;
     const Point3 cameraCenter = Point3::Origin;
-    const float rayMaxRange = 1000;
+    const float rayMaxRange = 100;
     Camera mainCamera = Camera(cameraCenter, screenWidth, pixelPerRows, fov, ratioAspect, rayMaxRange);
     const int WALL_RIGHT = screenWidth/2 + 1;
     const int WALL_LEFT = -WALL_RIGHT;
@@ -33,13 +33,13 @@ int main()
     Material red100(Color::Red, 1, 0.5, 0);
     Material red50(Color::Red, 1, 1, 0);
     // Material blue100(Color::Blue, 1, 0, 0);
-    Material white100(Color::White, 1, 1, 0);
+    Material white100(Color::Green, 1, 1, 0);
 
     Scene scene = Scene(mainCamera);
 
-    Point3 s1Center = Point3(-15, -CEILLING+10, 30);
+    // Point3 s1Center = Point3(-15, GROUND +10, 30);
     float s1Radius = 10;
-    add_object<Sphere>(scene.objects, s1Center, s1Radius, red100);
+    add_object<Sphere>(scene.objects, Point3(-15, GROUND, 30), s1Radius, red100);
 
     Point3 s2Center = Point3(15, -5, 70);
     float s2Radius = 10;
@@ -47,8 +47,8 @@ int main()
 
     // add_object<Plane>(scene.objects, Point3(0, CEILLING, 0), Direction::Down, white100);
     add_object<Plane>(scene.objects, Point3(0, GROUND, 0), Direction::Up, white100);
-    // add_object<Plane>(scene.objects, Point3(WALL_LEFT, 0, 0), Direction::Right, white100);
-    // add_object<Plane>(scene.objects, Point3(WALL_RIGHT, 0, 0), Direction::Left, white100);
+    add_object<Plane>(scene.objects, Point3(WALL_LEFT, 0, 0), Direction::Right, white100);
+    add_object<Plane>(scene.objects, Point3(WALL_RIGHT, 0, 0), Direction::Left, white100);
     // add_object<Plane>(scene.objects, Point3(0, 0, BACK), Direction::Backward, white100);
 
     float intensity = 1000;
@@ -58,7 +58,7 @@ int main()
     scene.lights.push_back(light2);
 
 
-    int samplingAntiAliasing = 8;
+    int samplingAntiAliasing = 1;
     int reflectCount = 3;
     scene.takePicture("ppm/scene.ppm", samplingAntiAliasing, reflectCount);
 

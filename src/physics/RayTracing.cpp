@@ -22,7 +22,8 @@ std::vector<Pixel> rayTracing(const Scene& scene, int sampling, int reflectCount
                 Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
                 Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
 
-                pixelColor += getOutgoingColorReflect(reflectCount, ray, scene);
+                pixelColor += diffuseLight(50, ray, scene);
+                // pixelColor += getOutgoingColorReflect(reflectCount, ray, scene);
             }
 
             pixelColor = pixelColor / sampling;
@@ -87,40 +88,43 @@ Color getOutgoingColorReflect(int reflectCount, const Ray& ray, const Scene& sce
         return Color::Black;
     }
 
-    //test sur tous les éléments de la scène pour les détecter
-    // auto hitPointData_ptr = rayCast(ray, scene.objects);
-    // if (hitPointData_ptr){
-    //     Color color;
-    //     if (hitPointData_ptr->objectMaterial.roughness != 0) {
-    //         float lightQty = getOutgoingLight(*hitPointData_ptr, scene.lights, scene.objects) * hitPointData_ptr->objectMaterial.roughness;
-    //         color = hitPointData_ptr->objectMaterial.color * lightQty;
-    //     }
+    // test sur tous les éléments de la scène pour les détecter
+    auto hitPointData_ptr = rayCast(ray, scene.objects);
+    if (hitPointData_ptr){
+        Color color;
+        if (hitPointData_ptr->objectMaterial.roughness != 0) {
+            float lightQty = getOutgoingLight(*hitPointData_ptr, scene.lights, scene.objects) * hitPointData_ptr->objectMaterial.roughness;
+            color = hitPointData_ptr->objectMaterial.color * lightQty;
+        }
 
 
-    //     if (hitPointData_ptr->objectMaterial.roughness != 1) {
-    //         const float epsilon = 1e-3f;
-    //         Direction reflectDir = getReflection(ray.direction, hitPointData_ptr->normal);
-    //         Ray reflecRay = Ray(Point3(hitPointData_ptr->point.vector + hitPointData_ptr->normal.vector * epsilon), reflectDir, ray.maxRange);
+        if (hitPointData_ptr->objectMaterial.roughness != 1) {
+            const float epsilon = 1e-3f;
+            Direction reflectDir = getReflection(ray.direction, hitPointData_ptr->normal);
+            Ray reflecRay = Ray(Point3(hitPointData_ptr->point.vector + hitPointData_ptr->normal.vector * epsilon), reflectDir, ray.maxRange);
 
-    //         auto newHitPointData_ptr = rayCast(reflecRay, scene.objects);
-    //         if (newHitPointData_ptr){
-    //             float lightQty = getOutgoingLight(*newHitPointData_ptr, scene.lights, scene.objects) * (1 - hitPointData_ptr->objectMaterial.roughness);
-    //             if (reflectCount == 1) {
-    //                 color += newHitPointData_ptr->objectMaterial.color * lightQty;
-    //             } else {
-    //                 color += getOutgoingColorReflect(reflectCount - 1, reflecRay, scene) * lightQty;
-    //             }
-    //         }
-    //     }
+            auto newHitPointData_ptr = rayCast(reflecRay, scene.objects);
+            if (newHitPointData_ptr){
+                float lightQty = getOutgoingLight(*newHitPointData_ptr, scene.lights, scene.objects) * (1 - hitPointData_ptr->objectMaterial.roughness);
+                if (reflectCount == 1) {
+                    color += newHitPointData_ptr->objectMaterial.color * lightQty;
+                } else {
+                    color += getOutgoingColorReflect(reflectCount - 1, reflecRay, scene) * lightQty;
+                }
+            }
+        }
 
-    //     return color;
-    // }
-    return diffuseLight(10, ray, scene);
+        return color;
+    }
 
-    // return Color::Black;
+    return Color::Black;
 }
 
 Color diffuseLight(int diffuseRayCount, const Ray& ray, const Scene& scene) {
+    if (diffuseRayCount == 0) {
+        return Color::Black;
+    }
+
     auto hitPointData_ptr = rayCast(ray, scene.objects);
     if (hitPointData_ptr){
         Color color;
@@ -131,7 +135,7 @@ Color diffuseLight(int diffuseRayCount, const Ray& ray, const Scene& scene) {
         return diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * hitPointData_ptr->objectMaterial.color;
     }
 
-    auto a = 0.5*(ray.direction.y + 1.0);
+    // auto a = 0.5*(ray.direction.y + 1.0);
     // std::cout << (Color::White*(1.0-a) + Color::Blue*a).toString() << "\n";
-    return Color::White*(1.0-a) + Color::Blue*a;
+    return Color::White; //*(1.0-a) + Color::Blue*a;
 }
