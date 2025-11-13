@@ -12,6 +12,7 @@ public:
     Color();
     Color(int red, int green, int blue);
     Color operator+(const Color& c) const;
+    Color operator*(const Color& c) const;
     Color operator*(float f) const;
     Color operator/(float f) const;
     void operator+=(const Color& c);

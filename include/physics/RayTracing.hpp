@@ -15,3 +15,4 @@ bool checkIfShadow(const Point3& point, float eps, const Ray& ray, const std::ve
 std::unique_ptr<HitPointData> rayCast(const Ray& ray, const std::vector<std::unique_ptr<Object>>& objectsToCheck);
 float getOutgoingLight(const HitPointData& from, const std::vector<Light>& lights, const std::vector<std::unique_ptr<Object>>& objects);
 Color getOutgoingColorReflect(int reflectCount, const Ray& ray, const Scene& scene);
+Color diffuseLight(int diffuseRayCount, const Ray& ray, const Scene& scene);

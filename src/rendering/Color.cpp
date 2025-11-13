@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "rendering/Color.hpp"
+#include <cmath>
 
 
 Color::Color()
@@ -23,6 +24,11 @@ Color Color::operator+(const Color& c) const
 Color Color::operator*(float f) const
 {
     return Color(r * f, g * f, b * f);
+}
+
+Color Color::operator*(const Color& c) const
+{
+    return Color(sqrt(r * c.r), sqrt(g * c.g), sqrt(b * c.b));
 }
 
 Color Color::operator/(float f) const
