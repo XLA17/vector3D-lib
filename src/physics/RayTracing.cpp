@@ -11,6 +11,7 @@ std::vector<Pixel> rayTracing(const Scene& scene, int sampling, int reflectCount
     
     float uniteX = mainCamera.cameraWidth / mainCamera.pixelPerRow;
     float uniteY = mainCamera.cameraHeight / mainCamera.pixelPerColumn;
+    #pragma omp parallel for
     for (int y = 0; y < mainCamera.pixelPerColumn; y++) {
         for (int x = 0; x < mainCamera.pixelPerRow; x++) {
             Color pixelColor;
@@ -22,7 +23,7 @@ std::vector<Pixel> rayTracing(const Scene& scene, int sampling, int reflectCount
                 Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
                 Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
 
-                pixelColor += diffuseLight(50, ray, scene);
+                pixelColor += diffuseLight(reflectCount, ray, scene);
                 // pixelColor += getOutgoingColorReflect(reflectCount, ray, scene);
             }
 
@@ -49,7 +50,7 @@ std::unique_ptr<HitPointData> rayCast(const Ray& ray, const std::vector<std::uni
     return intersectionPoint;
 }
 
-float getOutgoingLight(const HitPointData& from, const std::vector<Light>& lights, const std::vector<std::unique_ptr<Object>>& objects) {
+float getOutgoingLight(const HitPointData& from, const std::vector<Light>& lights, const std::vector<std::unique_ptr<Object>>& objects) { // TODO: ne pas prendre toutes les lampes (aléatoirement)
     float outgoingLight; // TODO: add the light emitted by the surface
     const float epsilon = 1e-3f; // to eliminate the noise
     Point3 point = Point3(from.point.vector + from.normal.vector * epsilon); // we add an offset to the point along the normal
@@ -61,8 +62,6 @@ float getOutgoingLight(const HitPointData& from, const std::vector<Light>& light
         if (!checkIfShadow(point, epsilon, lightRay, objects)) {
             float incomingLight = max(0.0f, dotProduct(from.normal.vector, lightRayDir.vector)) * light.emission / pow(getDistance(from.point, light.position), 2);
             outgoingLight += incomingLight;
-        } else {
-
         }
     }
 
@@ -127,15 +126,60 @@ Color diffuseLight(int diffuseRayCount, const Ray& ray, const Scene& scene) {
 
     auto hitPointData_ptr = rayCast(ray, scene.objects);
     if (hitPointData_ptr){
-        Color color;
         Direction randomDir = getRandomDir();
         if (dotProduct(randomDir.vector, hitPointData_ptr->normal.vector) < 0.0) {
             randomDir = Direction(randomDir.vector * -1);
         }
-        return diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * hitPointData_ptr->objectMaterial.color;
+
+        const float pdf = 1.0f / (2.0f * M_PI);
+
+        float cosTheta = std::max(0.0f, dotProduct(randomDir.vector, hitPointData_ptr->normal.vector));
+
+        Color emmision = hitPointData_ptr->objectMaterial.color * hitPointData_ptr->objectMaterial.emmision;
+        Color diffuse = hitPointData_ptr->objectMaterial.color * diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * (cosTheta / pdf);
+
+        // return hitPointData_ptr->objectMaterial.color * hitPointData_ptr->objectMaterial.emmision + hitPointData_ptr->objectMaterial.color * diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * (cosTheta / pdf);
+        // return emmision + hitPointData_ptr->objectMaterial.color * diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * (cosTheta / pdf);
+        return emmision + diffuse;
     }
 
-    // auto a = 0.5*(ray.direction.y + 1.0);
-    // std::cout << (Color::White*(1.0-a) + Color::Blue*a).toString() << "\n";
-    return Color::White; //*(1.0-a) + Color::Blue*a;
+    return Color::White;
 }
+
+
+
+
+
+// Color diffuseLight(int depth, const Ray& ray, const Scene& scene)
+// {
+//     if (depth == 0) return Color::Black;
+
+//     auto hit = rayCast(ray, scene.objects);
+//     if (!hit) {
+//         return Color::White;
+//     }
+
+//     const Material& mat = hit->objectMaterial;
+
+//     // Emission directe
+//     Color emission = mat.color * mat.emmision;
+
+//     // Direction aléatoire uniforme dans l’hémisphère
+//     Direction randomDir = getRandomDir();
+//     if (dotProduct(randomDir.vector, hit->normal.vector) < 0.0)
+//         randomDir.vector *= -1;
+
+//     // PDF pour échantillonnage uniforme d’une demi-sphère = 1 / (2π)
+//     const float pdf = 1.0f / (2.0f * M_PI);
+
+//     // cos θ
+//     float cosTheta = std::max(0.0f, dotProduct(randomDir.vector, hit->normal.vector));
+
+//     // Lumière indirecte
+//     Color indirect =
+//         mat.color *
+//         diffuseLight(depth - 1, Ray(hit->point, randomDir, ray.maxRange), scene) *
+//         (cosTheta / pdf);
+
+//     return emission + indirect;
+// }

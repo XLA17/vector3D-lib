@@ -19,10 +19,10 @@ int main()
 
     const float fov = 90;
     const float screenWidth = 100;
-    const int pixelPerRows = 560;
+    const int pixelPerRows = 540;
     const float ratioAspect = 16./9;
     const Point3 cameraCenter = Point3::Origin;
-    const float rayMaxRange = 100;
+    const float rayMaxRange = 200;
     Camera mainCamera = Camera(cameraCenter, screenWidth, pixelPerRows, fov, ratioAspect, rayMaxRange);
     const int WALL_RIGHT = screenWidth/2 + 1;
     const int WALL_LEFT = -WALL_RIGHT;
@@ -30,7 +30,7 @@ int main()
     const int GROUND = -CEILLING;
     const int BACK = 100;
 
-    Material red100(Color::Red, 1, 0.5, 0);
+    Material red100(Color::Red, 1, 0.5, 1);
     Material red50(Color::Red, 1, 1, 0);
     // Material blue100(Color::Blue, 1, 0, 0);
     Material white100(Color::Green, 1, 1, 0);
@@ -45,11 +45,11 @@ int main()
     float s2Radius = 10;
     add_object<Sphere>(scene.objects, s2Center, s2Radius, red100);
 
-    // add_object<Plane>(scene.objects, Point3(0, CEILLING, 0), Direction::Down, white100);
+    add_object<Plane>(scene.objects, Point3(0, CEILLING, 0), Direction::Down, white100);
     add_object<Plane>(scene.objects, Point3(0, GROUND, 0), Direction::Up, white100);
     add_object<Plane>(scene.objects, Point3(WALL_LEFT, 0, 0), Direction::Right, white100);
     add_object<Plane>(scene.objects, Point3(WALL_RIGHT, 0, 0), Direction::Left, white100);
-    // add_object<Plane>(scene.objects, Point3(0, 0, BACK), Direction::Backward, white100);
+    add_object<Plane>(scene.objects, Point3(0, 0, BACK), Direction::Backward, white100);
 
     float intensity = 1000;
     Light light = Light(Point3(WALL_LEFT +10, 0, BACK/2), intensity, sqrt(intensity));
@@ -58,9 +58,9 @@ int main()
     scene.lights.push_back(light2);
 
 
-    int samplingAntiAliasing = 1;
+    int samplingAntiAliasing = 64;
     int reflectCount = 3;
-    scene.takePicture("ppm/scene.ppm", samplingAntiAliasing, reflectCount);
+    scene.takePicture("ppm/scene2.ppm", samplingAntiAliasing, reflectCount);
 
 
     auto end = chrono::high_resolution_clock::now();
