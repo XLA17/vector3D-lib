@@ -49,25 +49,25 @@ void Vector3::operator-=(const Vector3& v)
     z -= v.z;
 }
 
-void Vector3::operator*=(Vector3 v) const
+void Vector3::operator*=(const Vector3& v)
 {
-    x * v.x;
-    y * v.y;
-    z * v.z;
+    x *= v.x;
+    y *= v.y;
+    z *= v.z;
 }
 
 void Vector3::operator*=(float f)
 {
-    x * f;
-    y * f;
-    z * f;
+    x *= f;
+    y *= f;
+    z *= f;
 }
 
 void Vector3::operator/=(float f)
 {
-    x / f;
-    y / f;
-    z / f;
+    x /= f;
+    y /= f;
+    z /= f;
 }
 
 Vector3 Vector3::normalize() const

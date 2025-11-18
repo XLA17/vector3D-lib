@@ -58,7 +58,7 @@ int main()
     scene.lights.push_back(light2);
 
 
-    int samplingAntiAliasing = 64;
+    int samplingAntiAliasing = 16;
     int reflectCount = 3;
     scene.takePicture("ppm/scene2.ppm", samplingAntiAliasing, reflectCount);
 

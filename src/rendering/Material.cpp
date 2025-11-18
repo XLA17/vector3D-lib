@@ -3,7 +3,7 @@
 #include "rendering/Material.hpp"
 
 
-Material::Material(Color albedo, float transmission, float roughness, float emmisive)
+Material::Material(Color albedo, float transmission, float roughness, float emmision)
     : albedo(albedo), transmission(transmission), roughness(roughness), emmision(emmision)
 {
     if (transmission < 0 && transmission > 1) {
