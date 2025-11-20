@@ -138,48 +138,9 @@ Color diffuseLight(int diffuseRayCount, const Ray& ray, const Scene& scene) {
         Color emmision = hitPointData_ptr->objectMaterial.color * hitPointData_ptr->objectMaterial.emmision;
         Color diffuse = hitPointData_ptr->objectMaterial.color * diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * (cosTheta / pdf);
 
-        // return hitPointData_ptr->objectMaterial.color * hitPointData_ptr->objectMaterial.emmision + hitPointData_ptr->objectMaterial.color * diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * (cosTheta / pdf);
-        // return emmision + hitPointData_ptr->objectMaterial.color * diffuseLight(diffuseRayCount-1, Ray(hitPointData_ptr->point, randomDir, ray.maxRange), scene) * (cosTheta / pdf);
         return emmision + diffuse;
     }
 
+    // std::cout << "hit nothing\n"; 
     return Color::White;
 }
-
-
-
-
-
-// Color diffuseLight(int depth, const Ray& ray, const Scene& scene)
-// {
-//     if (depth == 0) return Color::Black;
-
-//     auto hit = rayCast(ray, scene.objects);
-//     if (!hit) {
-//         return Color::White;
-//     }
-
-//     const Material& mat = hit->objectMaterial;
-
-//     // Emission directe
-//     Color emission = mat.color * mat.emmision;
-
-//     // Direction aléatoire uniforme dans l’hémisphère
-//     Direction randomDir = getRandomDir();
-//     if (dotProduct(randomDir.vector, hit->normal.vector) < 0.0)
-//         randomDir.vector *= -1;
-
-//     // PDF pour échantillonnage uniforme d’une demi-sphère = 1 / (2π)
-//     const float pdf = 1.0f / (2.0f * M_PI);
-
-//     // cos θ
-//     float cosTheta = std::max(0.0f, dotProduct(randomDir.vector, hit->normal.vector));
-
-//     // Lumière indirecte
-//     Color indirect =
-//         mat.color *
-//         diffuseLight(depth - 1, Ray(hit->point, randomDir, ray.maxRange), scene) *
-//         (cosTheta / pdf);
-
-//     return emission + indirect;
-// }

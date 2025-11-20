@@ -28,7 +28,7 @@ Color Color::operator*(float f) const
 
 Color Color::operator*(const Color& c) const
 {
-    return Color(sqrt(r * c.r), sqrt(g * c.g), sqrt(b * c.b));
+    return Color(sqrt(r * c.r), sqrt(g * c.g), sqrt(b * c.b)); //TODO: remove sqrt
 }
 
 Color Color::operator/(float f) const
