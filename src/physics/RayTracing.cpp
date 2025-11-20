@@ -51,7 +51,7 @@ std::unique_ptr<HitPointData> rayCast(const Ray& ray, const std::vector<std::uni
 }
 
 float getOutgoingLight(const HitPointData& from, const std::vector<Light>& lights, const std::vector<std::unique_ptr<Object>>& objects) { // TODO: ne pas prendre toutes les lampes (aléatoirement)
-    float outgoingLight; // TODO: add the light emitted by the surface
+    float outgoingLight = 0; // TODO: add the light emitted by the surface
     const float epsilon = 1e-3f; // to eliminate the noise
     Point3 point = Point3(from.point.vector + from.normal.vector * epsilon); // we add an offset to the point along the normal
 

@@ -18,7 +18,7 @@ Vector3 crossProduct(const Vector3& v1, const Vector3& v2)
 
 Vector3 normalize(const Vector3& v)
 {
-    if (v.x == 0 && v.y == 0 & v.z == 0)
+    if ((v.x == 0) && (v.y == 0) & (v.z == 0))
     {
         throw std::runtime_error("You cannot normalize a vector zero!");
     }

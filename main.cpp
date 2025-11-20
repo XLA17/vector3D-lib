@@ -60,7 +60,7 @@ int main()
 
     int samplingAntiAliasing = 16;
     int reflectCount = 3;
-    scene.takePicture("ppm/scene2.ppm", samplingAntiAliasing, reflectCount);
+    scene.takePicture("ppm/scene.ppm", samplingAntiAliasing, reflectCount);
 
 
     auto end = chrono::high_resolution_clock::now();

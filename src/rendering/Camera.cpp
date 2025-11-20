@@ -12,8 +12,8 @@ Camera::Camera(Point3 center, float cameraWidth, int pixelPerRow, int fov, float
     pixelPerColumn(float(pixelPerRow) / ratioAspect),
     fov(fov),
     ratioAspect(ratioAspect),
-    rayMaxRange(rayMaxRange),
-    focalPoint(Point3(center.x, center.y, center.z -((cameraWidth / 2.0) / (tan(fov * acos(-1) / 360.0))))) // acos(-1) = pi
+    focalPoint(Point3(center.x, center.y, center.z -((cameraWidth / 2.0) / (tan(fov * acos(-1) / 360.0))))), // acos(-1) = pi
+    rayMaxRange(rayMaxRange)
 {
     if (rayMaxRange <= 0) {
         throw std::runtime_error("rayMaxRange must be > 0");

@@ -3,7 +3,7 @@
 
 
 Plane::Plane(Point3 p, Direction normal, Material material)
-    : p(p), normal(normal), Object(material) {}
+    : Object(material), p(p), normal(normal) {}
 
 Direction Plane::getNormal(Point3 intersectionPoint) const // TODO: chnager getNormal
 {

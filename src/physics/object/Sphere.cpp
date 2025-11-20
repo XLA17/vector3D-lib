@@ -3,7 +3,7 @@
 
 
 Sphere::Sphere(const Point3& center, float radius, Material material)
-    : center(center), radius(radius), Object(material) {}
+    : Object(material), center(center), radius(radius) {}
 
 Direction Sphere::getNormal(Point3 intersectionPoint) const
 {
