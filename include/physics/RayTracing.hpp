@@ -1,7 +1,5 @@
 #pragma once
 
-#include <list>
-
 #include "physics/object/Sphere.hpp"
 #include "physics/Ray.hpp"
 #include "physics/HitPointData.hpp"
