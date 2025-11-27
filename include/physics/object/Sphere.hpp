@@ -13,5 +13,5 @@ public:
     Sphere(const Point3& center, float radius, Material material);
 
     Direction getNormal(Point3 intersectionPoint) const;
-    float intersectionWithRay(Ray ray) const;
+    float intersectionWithRay(Ray ray);
 };  

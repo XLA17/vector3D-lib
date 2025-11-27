@@ -12,5 +12,5 @@ public:
     RectangularBox();
     RectangularBox(const Point3& minPoint, const Point3& maxPoint);
 
-    bool intersectionWithRay(Ray ray) const;
+    bool intersectionWithRay(Ray ray);
 };  

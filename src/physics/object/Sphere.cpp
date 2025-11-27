@@ -10,7 +10,7 @@ Direction Sphere::getNormal(Point3 intersectionPoint) const
     return getDirection(center, intersectionPoint);
 }
 
-float Sphere::intersectionWithRay(Ray ray) const
+float Sphere::intersectionWithRay(Ray ray)
 {
     // equation : A*t² + B*t + C = 0
     Vector3 co = ray.origin.vector - center.vector;

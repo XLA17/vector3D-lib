@@ -14,7 +14,7 @@ RectangularBox::RectangularBox(const Point3& minPoint, const Point3& maxPoint)
     maxPoint(maxPoint)
     {}
 
-bool RectangularBox::intersectionWithRay(Ray ray) const
+bool RectangularBox::intersectionWithRay(Ray ray)
 {
     float tNear = -std::numeric_limits<float>::infinity();
     float tFar  =  std::numeric_limits<float>::infinity();

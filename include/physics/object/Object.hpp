@@ -13,7 +13,7 @@ public:
     Object(const Material& material);
     virtual ~Object() = default;
 
-    virtual float intersectionWithRay(Ray ray) const = 0;
+    virtual float intersectionWithRay(Ray ray)  = 0;
     virtual Direction getNormal(Point3 intersectionPoint) const = 0;
     virtual std::string toString();
 };  

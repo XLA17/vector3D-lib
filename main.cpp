@@ -64,6 +64,8 @@ int main()
     scene.lights.push_back(light2);
 
     Mesh mesh = OffReader::readFile("./assets/off/cube.off", white100);
+    // scene.vertices.push_back(mesh)
+    add_object<Mesh>(scene.objects, mesh.vertices, mesh.triangles, mesh.material);
 
 
 

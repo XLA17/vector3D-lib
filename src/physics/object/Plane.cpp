@@ -10,7 +10,7 @@ Direction Plane::getNormal(Point3 intersectionPoint) const // TODO: chnager getN
     return normal;
 }
 
-float Plane::intersectionWithRay(Ray ray) const
+float Plane::intersectionWithRay(Ray ray)
 {
     float denom = dotProduct(normal.vector, ray.direction.vector);
     if (denom != 0) {

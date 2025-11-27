@@ -8,7 +8,8 @@ Mesh::Mesh()
     : Object(Material()),
     vertices(std::vector<Point3>()),
     triangles(std::vector<int>()),
-    box(RectangularBox())
+    box(RectangularBox()),
+    normal(Direction::Backward)
     {}
 
 Mesh::Mesh(const std::vector<Point3>& vertices, std::vector<int> triangles, Material material)
@@ -18,7 +19,8 @@ Mesh::Mesh(const std::vector<Point3>& vertices, std::vector<int> triangles, Mate
     box([&]{
         auto bb = getBoundingBoxPoint();
         return RectangularBox(bb.first, bb.second);
-    }())
+    }()),
+    normal(Direction::Backward)
     {}
 
 std::pair<Point3, Point3> Mesh::getBoundingBoxPoint() const
@@ -58,19 +60,24 @@ std::pair<Point3, Point3> Mesh::getBoundingBoxPoint() const
 }
 
 // TODO
-float Mesh::intersectionWithRay(Ray ray) const
+float Mesh::intersectionWithRay(Ray ray)
 {
     if (box.intersectionWithRay(ray)) {
         for (size_t i = 0; i < triangles.size(); i++) {
-
+            Triangle t(vertices[i], vertices[i+1], vertices[i+2], material);
+            float distance = t.intersectionWithRay(ray);
+            if (distance > 0) {
+                normal = t.getNormal(vertices[i]);
+                return distance;
+            }
         }
     }
 
-    return 0.0;
+    return -1.0;
 }
 
 // TODO
 Direction Mesh::getNormal(Point3 intersectionPoint) const
 {
-    return Direction::Forward;
+    return normal;
 }

@@ -15,6 +15,8 @@ class Scene {
 public:
     Camera camera;
     std::vector<std::unique_ptr<Object>> objects;
+    std::vector<Point3> vertices;
+    std::vector<int> triangles;
     std::vector<Light> lights;
 
     Scene(Camera camera);

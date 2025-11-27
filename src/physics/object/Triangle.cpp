@@ -12,7 +12,7 @@ Triangle::Triangle(const Point3& v0, const Point3& v1, const Point3& v2, Materia
     normal(Direction((v1.vector - v0.vector) * (v2.vector - v0.vector)))
     {}
 
-float Triangle::intersectionWithRay(Ray ray) const
+float Triangle::intersectionWithRay(Ray ray)
 {
     const float EPSILON = 0.0000001;
     Vector3 edge1, edge2, h, s, q;
