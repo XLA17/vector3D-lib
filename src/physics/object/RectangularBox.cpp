@@ -4,6 +4,11 @@
 #include "physics/utils/VectorUtils.hpp"
 
 
+RectangularBox::RectangularBox()
+    : minPoint(Point3::Origin),
+    maxPoint(Point3::Origin)
+    {}
+
 RectangularBox::RectangularBox(const Point3& minPoint, const Point3& maxPoint)
     : minPoint(minPoint),
     maxPoint(maxPoint)

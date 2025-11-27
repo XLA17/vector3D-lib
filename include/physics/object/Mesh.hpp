@@ -7,12 +7,16 @@
 #include "physics/Point3.hpp"
 #include "rendering/Material.hpp"
 
-class Mesh {
+class Mesh : public Object {
 public:
-    std::vector<Triangle> triangles;
+    std::vector<Point3> vertices;
+    std::vector<int> triangles;
     RectangularBox box;
     Material material;
 
-    Mesh(const std::vector<Triangle>& triangles, RectangularBox box, Material material);
+    Mesh();
+    Mesh(const std::vector<Point3>& vertices, std::vector<int> triangles, Material material);
     std::pair<Point3, Point3> getBoundingBoxPoint() const;
+    float intersectionWithRay(Ray ray) const;
+    Direction getNormal(Point3 intersectionPoint) const;
 };  

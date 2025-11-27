@@ -8,6 +8,7 @@
 #include "physics/object/Triangle.hpp"
 #include "rendering/Scene.hpp"
 #include "rendering/Camera.hpp"
+#include "readers/OffReader.hpp"
 
 template <typename T, typename... Args>
 void add_object(std::vector<std::unique_ptr<Object>>& vec, Args&&... args) {
@@ -61,6 +62,10 @@ int main()
     Light light2 = Light(Point3(WALL_RIGHT -10, 0, BACK/2), intensity, sqrt(intensity));
     scene.lights.push_back(light);
     scene.lights.push_back(light2);
+
+    Mesh mesh = OffReader::readFile("./assets/off/cube.off", white100);
+
+
 
 
     int samplingAntiAliasing = 100;

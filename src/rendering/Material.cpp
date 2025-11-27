@@ -3,6 +3,10 @@
 #include "rendering/Material.hpp"
 
 
+Material::Material()
+    : albedo(Color::Black)
+    {}
+
 Material::Material(Color albedo, float transmission, float roughness, float emmision)
     : albedo(albedo), transmission(transmission), roughness(roughness), emmision(emmision)
 {

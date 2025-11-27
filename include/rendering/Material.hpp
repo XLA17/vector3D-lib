@@ -12,6 +12,7 @@ public:
     Color color;
     float emmision;
 
+    Material();
     Material(Color albedo, float transmission, float roughness, float emmision);
     void emmited();
 };
