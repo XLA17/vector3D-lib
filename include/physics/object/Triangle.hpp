@@ -12,6 +12,6 @@ public:
     Direction normal;
 
     Triangle(const Point3& v0, const Point3& v1, const Point3& v2, Material material);
-
+    Direction getNormal(Point3 intersectionPoint) const;
     float intersectionWithRay(Ray ray) const;
 };  

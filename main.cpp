@@ -5,6 +5,7 @@
 #include "physics/Light.hpp"
 #include "physics/object/Sphere.hpp"
 #include "physics/object/Plane.hpp"
+#include "physics/object/Triangle.hpp"
 #include "rendering/Scene.hpp"
 #include "rendering/Camera.hpp"
 
@@ -50,8 +51,10 @@ int main()
     add_object<Plane>(scene.objects, Point3(0, GROUND, 0), Direction::Up, white100);
     add_object<Plane>(scene.objects, Point3(WALL_LEFT, 0, 0), Direction::Right, white100);
     add_object<Plane>(scene.objects, Point3(WALL_RIGHT, 0, 0), Direction::Left, white100);
-    // add_object<Plane>(scene.objects, Point3(0, 0, BACK), Direction::Backward, white100);
-    add_object<Plane>(scene.objects, Point3(0, 0, -BACK), Direction::Forward, white100);
+    // add_object<Plane>(scene.objects, Point3(0, 0, -BACK), Direction::Backward, white100);
+    // add_object<Plane>(scene.objects, Point3(0, 0, BACK), Direction::Forward, white100);
+
+    add_object<Triangle>(scene.objects, Point3(WALL_LEFT, 0, BACK), Point3(0, CEILLING, BACK), Point3(WALL_RIGHT, 0, BACK), red100light);
 
     float intensity = 1000;
     Light light = Light(Point3(WALL_LEFT +10, 0, BACK/2), intensity, sqrt(intensity));
@@ -60,9 +63,9 @@ int main()
     scene.lights.push_back(light2);
 
 
-    int samplingAntiAliasing = 500;
+    int samplingAntiAliasing = 100;
     int reflectCount = 3;
-    scene.takePicture("ppm/scene500sampDiffuse.ppm", samplingAntiAliasing, reflectCount);
+    scene.takePicture("ppm/scene.ppm", samplingAntiAliasing, reflectCount);
 
 
     auto end = chrono::high_resolution_clock::now();

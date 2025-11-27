@@ -4,33 +4,38 @@
 #include "physics/utils/VectorUtils.hpp"
 
 
-RectangularBox::RectangularBox(const Point3& center, float width, float height, float depth, Material material)
-    : center(center),
-    width(width),
-    height(height),
-    depth(depth),
-    material(material)
+RectangularBox::RectangularBox(const Point3& minPoint, const Point3& maxPoint)
+    : minPoint(minPoint),
+    maxPoint(maxPoint)
     {}
 
-bool RectangularBox::intersectionWithRay(Ray ray) const // que pour x là
+bool RectangularBox::intersectionWithRay(Ray ray) const
 {
-    float tmin = std::numeric_limits<float>::min();
-    float tmax = std::numeric_limits<float>::max();
+    float tNear = -std::numeric_limits<float>::infinity();
+    float tFar  =  std::numeric_limits<float>::infinity();
 
-    Point3 boxMin = Point3(center.x - width/2, center.y - height/2, center.z - depth/2);
-    Point3 boxMax = Point3(center.x + width/2, center.y + height/2, center.z + depth/2);
+    for (int i = 0; i < 3; i++) {
+        float O = (i == 0 ? ray.origin.x : (i == 1 ? ray.origin.y : ray.origin.z));
+        float D = (i == 0 ? ray.direction.x : (i == 1 ? ray.direction.y : ray.direction.z));
+        float minB = (i == 0 ? minPoint.x : (i == 1 ? minPoint.y : minPoint.z));
+        float maxB = (i == 0 ? maxPoint.x : (i == 1 ? maxPoint.y : maxPoint.z));
 
-    if (std::abs(ray.direction.x) < 1e-8) {
-        if (ray.origin.x < boxMin.x || ray.origin.x > boxMin.x) return false;
-    } else {
-        float t1 = (boxMin.x - ray.origin.x) / ray.direction.x;
-        float t2 = (boxMax.x - ray.origin.x) / ray.direction.x;
-        if (t1 > t2) std::swap(t1,t2);
-        tmin = std::max(tmin, t1);
-        tmax = std::min(tmax, t2);
-        if (tmin > tmax) return false;
+        if (std::fabs(D) < 1e-8) {
+            if (O < minB || O > maxB)
+                return false;
+        } else {
+            float t1 = (minB - O) / D;
+            float t2 = (maxB - O) / D;
+
+            if (t1 > t2) std::swap(t1, t2);
+
+            tNear = std::max(tNear, t1);
+            tFar  = std::min(tFar,  t2);
+
+            if (tNear > tFar)
+                return false;
+        }
     }
 
-    if (tmax < 0) return false;
-    return true;
+    return tFar >= 0;
 }

@@ -6,13 +6,10 @@
 
 class RectangularBox {
 public:
-    Point3 center;
-    float width;
-    float height;
-    float depth;
-    Material material;
+    Point3 minPoint;
+    Point3 maxPoint;
 
-    RectangularBox(const Point3& center, float width, float height, float depth, Material material);
+    RectangularBox(const Point3& minPoint, const Point3& maxPoint);
 
-    bool RectangularBox::intersectionWithRay(Ray ray) const;
+    bool intersectionWithRay(Ray ray) const;
 };  

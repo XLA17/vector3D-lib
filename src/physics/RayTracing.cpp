@@ -23,8 +23,8 @@ std::vector<Pixel> rayTracing(const Scene& scene, int sampling, int reflectCount
                 Direction dir = getDirection(mainCamera.focalPoint, currentcameraPoint);
                 Ray ray = Ray(currentcameraPoint, dir, mainCamera.rayMaxRange);
 
-                pixelColor += diffuseLight(reflectCount, ray, scene);
-                // pixelColor += getOutgoingColorReflect(reflectCount, ray, scene);
+                // pixelColor += diffuseLight(reflectCount, ray, scene);
+                pixelColor += getOutgoingColorReflect(reflectCount, ray, scene);
             }
 
             pixelColor = pixelColor / sampling;

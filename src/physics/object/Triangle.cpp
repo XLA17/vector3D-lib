@@ -42,3 +42,10 @@ float Triangle::intersectionWithRay(Ray ray) const
     else
         return -1.0;
 }
+
+Direction Triangle::getNormal(Point3 intersectionPoint) const
+{
+    Vector3 edge1 = v1.vector - v0.vector;
+    Vector3 edge2 = v2.vector - v0.vector;
+    return Direction(crossProduct(edge1, edge2));
+}
